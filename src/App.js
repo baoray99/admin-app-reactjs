@@ -2,7 +2,7 @@ import React, { Component } from "react";
 // import Items from "./components/Items";
 // import Counter from './components/Counter'
 import './App.css'
-import Layouts from "./components/Layouts";
+import Layouts from "./layouts/Layouts";
 export default class App extends Component {
   render() {
     // const list = [
