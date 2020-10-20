@@ -1,140 +1,130 @@
-import React, { Component } from "react";
-import { Table, Tag, Space } from "antd";
-export default class Keyboards extends Component {
-  render() {
-    const columns = [
-      {
-        title: "Name",
-        dataIndex: "name",
-        key: "name",
-        render: (text) => <a>{text}</a>,
-      },
-      {
-        title: "Brand",
-        dataIndex: "brand",
-        key: "brand",
-      },
+import { Table, Space, Button } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+import React from "react";
+import { useState, useEffect } from "react";
+import Details from "../components/Details";
+import ProductsAPI from "../api/ProductsAPI";
 
-      {
-        title: "Price",
-        dataIndex: "price",
-        key: "price",
-      },
-      {
-        title: "Sale_Price",
-        key: "sale_price",
-        dataIndex: "sale_price",
-        // render: (tags) => (
-        //   <>
-        //     {tags.map((tag) => {
-        //       let color = tag.length > 5 ? "geekblue" : "green";
-        //       if (tag === "loser") {
-        //         color = "volcano";
-        //       }
-        //       return (
-        //         <Tag color={color} key={tag}>
-        //           {tag.toUpperCase()}
-        //         </Tag>
-        //       );
-        //     })}
-        //   </>
-        // ),
-      },
-      {
-        title: "Origin",
-        dataIndex: "origin",
-        key: "origin",
-      },
-      {
-        title: "Quantity",
-        dataIndex: "quantity",
-        key: "quantity",
-      },
-      {
-        title: "Size",
-        dataIndex: "size",
-        key: "size",
-      },
-      {
-        title: "Color",
-        dataIndex: "color",
-        key: "color",
-      },
-      {
-        title: "Image",
-        dataIndex: "image",
-        key: "image",
-      },
-      {
-        title: "Desciption",
-        dataIndex: "description",
-        key: "description",
-      },
-      {
-        title: "Action",
-        key: "action",
-        render: (text, record) => (
-          <Space size="middle">
-            <a>
-              More Details
-              {/* {record.name} */}
-            </a>
-            <a>Edit</a>
-            <a>Delete</a>
-          </Space>
-        ),
-      },
-    ];
+export default function Keyboards() {
+  const title = "Keyboard";
+  const columns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      render: (text) => <a>{text}</a>,
+    },
+    {
+      title: "Brand",
+      dataIndex: "brand",
+      key: "brand",
+    },
 
-    const data = [
-      {
-        key: "1",
-        name: "Lenovo Yoga 710",
-        brand: "Lenovo",
-        price: "12.000.000",
-        // tags: ["nice", "developer"],
-        sale_price: "14.000.000",
-        origin: "USA",
-        quantity: 10,
-        size: "",
-        color: "Gray",
-        image: "",
-        description: "",
-      },
-      {
-        key: "2",
-        name: "Lenovo Yoga 710",
-        brand: "Lenovo",
-        price: "12.000.000",
-        // tags: ["nice", "developer"],
-        sale_price: "14.000.000",
-        origin: "USA",
-        quantity: 10,
-        size: "",
-        color: "Gray",
-        image: "",
-        description: "",
-      },
-      {
-        key: "3",
-        name: "Lenovo Yoga 710",
-        brand: "Lenovo",
-        price: "12.000.000",
-        // tags: ["nice", "developer"],
-        sale_price: "14.000.000",
-        origin: "USA",
-        quantity: 10,
-        size: "",
-        color: "Gray",
-        image: "",
-        description: "",
-      },
-    ];
-
-    return (
-      <div>
-        <Table columns={columns} dataSource={data} />
+    {
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+    },
+    {
+      title: "Sale_Price",
+      key: "sales_price",
+      dataIndex: "sales_price",
+    },
+    {
+      title: "Origin",
+      dataIndex: "madeIn",
+      key: "madeIn",
+    },
+    {
+      title: "Quantity",
+      dataIndex: "quantity",
+      key: "quantity",
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (text, record) => (
+        <Space size="middle">
+          <Button
+            type="primary"
+            onClick={() => onSelectedItem(record)}
+            shape="round"
+            style={{ backgroundColor: "#80deea", borderColor: "#80deea" }}
+          >
+            More Details
+            {/* {record.name} primary boi den het btn */}
+          </Button>
+          <Button
+            type="primary"
+            shape="round"
+            style={{ backgroundColor: "#ffb74d", borderColor: "#ffb74d" }}
+          >
+            Edit
+            {/* {record.name} primary boi den het btn */}
+          </Button>
+          <Button type="primary" danger shape="round">
+            Delete
+            {/* {record.name} primary boi den het btn */}
+          </Button>
+        </Space>
+      ),
+      width: 200,
+    },
+  ];
+  const DescriptionItem = ({ title, content }) => (
+    <div className="site-description-item-profile-wrapper">
+      <p className="site-description-item-profile-p-label">
+        {title}:{content}
+      </p>
+    </div>
+  );
+  const [visible, setVisible] = useState(false);
+  const showDrawer = () => {
+    setVisible(true);
+  };
+  const onClose = () => {
+    setVisible(false);
+  };
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
+  const [selectedItem, setSelectedItem] = useState([]);
+  const onSelectedItem = (record) => {
+    setSelectedItem(record);
+    setVisible(true);
+  };
+  useEffect(() => {
+    ProductsAPI.getProducts().then((res) => {
+      console.log("data", res);
+      setData(res.data);
+      setLoading(false);
+    });
+  });
+  return (
+    <div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          height: 60,
+          width: "100%",
+        }}
+      >
+        <div>
+          <p style={{ fontSize: 24, margin: 0 }}>KEYBOARDS</p>
+        </div>
+        <Button type="primary" shape="round" icon={<PlusOutlined />} size={30}>
+          Add new Keyboard
+        </Button>
       </div>
-    );
-  }
+      <Table columns={columns} dataSource={data} loading={loading} />
+      <Details
+        item={selectedItem}
+        onClose={onClose}
+        visible={visible}
+        title={title}
+      />
+    </div>
+  );
 }
