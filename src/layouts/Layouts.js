@@ -32,7 +32,7 @@ import "./index.css";
 import React, { useState } from "react";
 
 export default function Layouts() {
-  const { Header, Content, Footer, Sider } = Layout;
+  const { Header, Content, Sider } = Layout;
   const { SubMenu } = Menu;
   const { Search } = Input;
   const suffix = (
@@ -212,7 +212,7 @@ export default function Layouts() {
                   marginLeft: collapsed ? 80 : 200,
                 }}
               >
-                <Route exact path="/" component={Home} />
+                <Route exact path="/home" component={Home} />
                 <Route exact path="/laptops" component={Laptops} />
                 <Route exact path="/pcs" component={Pcs} />
                 <Route exact path="/keyboards" component={Keyboards} />

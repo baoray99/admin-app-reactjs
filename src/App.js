@@ -1,19 +1,27 @@
 import React, { Component } from "react";
 // import Items from "./components/Items";
 // import Counter from './components/Counter'
-import './App.css'
+import "./App.css";
 import Layouts from "./layouts/Layouts";
+import Login from "./layouts/Login";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 export default class App extends Component {
   render() {
-    // const list = [
-    //   { name: "tanle", tuoi: "lon" },
-    //   { name: "kien", tuoi: "khi" },
-    // ];
     return (
       <div className="App">
-        {/* <Items data={list} /> */}
-        {/* <Counter/> */}
-        <Layouts />
+        <Router>
+          <Switch>
+            <Redirect exact from="/" to="/login" /> 
+            {/* phai co exact */}
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/home" component={Layouts} />
+          </Switch>
+        </Router>
       </div>
     );
   }
