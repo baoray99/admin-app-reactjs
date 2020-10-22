@@ -80,7 +80,7 @@ export default function Laptops() {
     {
       title: "Action",
       key: "action",
-      render: (text, record) => (
+      render: (record) => (
         <Space size="middle">
           <Button
             type="primary"

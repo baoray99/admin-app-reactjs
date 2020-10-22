@@ -36,7 +36,7 @@ export default function Editproduct(props) {
       setImage(res.data.Image)
       setDescription(res.data.description)
     });
-  }, []);
+  }, [id]);
 
   const onChange = (value) => {
     setColor(value);

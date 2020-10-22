@@ -30,9 +30,14 @@ import {
 import logo from "../assets/logo3.png";
 import "./index.css";
 import React, { useState } from "react";
+import {useHistory} from 'react-router-dom';
 
 export default function Layouts() {
   const { Header, Content, Sider } = Layout;
+  const history= useHistory();
+  const logout=()=>{
+    history.push('/')
+  }
   const { SubMenu } = Menu;
   const { Search } = Input;
   const suffix = (
@@ -76,7 +81,7 @@ export default function Layouts() {
           Change Avatar
         </a>
       </Menu.Item>
-      <Menu.Item danger icon={<LoginOutlined />}>
+      <Menu.Item onClick={logout} danger icon={<LoginOutlined />}>
         Log out
       </Menu.Item>
     </Menu>
@@ -105,7 +110,7 @@ export default function Layouts() {
               width: "10%",
             }}
           >
-            <a href="/" style={{ display: "flex" }}>
+            <a href="/home" style={{ display: "flex" }}>
               <img width="60px" height="100%" src={logo} alt="logo" />
             </a>
           </div>
@@ -147,7 +152,6 @@ export default function Layouts() {
                 Baoray <DownOutlined />
               </a>
             </Dropdown>
-            ,
           </div>
         </Header>
         <Layout style={{ minHeight: "690px" }}>
@@ -167,7 +171,7 @@ export default function Layouts() {
           >
             <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
               <Menu.Item key="1" icon={<HomeOutlined />}>
-                <Link to="/"> Home </Link>
+                <Link to="/home"> Home </Link>
               </Menu.Item>
               <SubMenu
                 key="sub2"

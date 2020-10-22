@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-// import Items from "./components/Items";
-// import Counter from './components/Counter'
 import "./App.css";
 import Layouts from "./layouts/Layouts";
 import Login from "./layouts/Login";
@@ -16,10 +14,18 @@ export default class App extends Component {
       <div className="App">
         <Router>
           <Switch>
-            <Redirect exact from="/" to="/login" /> 
-            {/* phai co exact */}
+            <Redirect exact from="/" to="/login" />
             <Route exact path="/login" component={Login} />
             <Route exact path="/home" component={Layouts} />
+            <Route exact path="/laptops" component={Layouts} />
+            <Route exact path="/pcs" component={Layouts} />
+            <Route exact path="/keyboards" component={Layouts} />
+            <Route exact path="/mouses" component={Layouts} />
+            <Route exact path="/monitors" component={Layouts} />
+            <Route exact path="/graphiccards" component={Layouts} />
+            <Route exact path="/customers" component={Layouts} />
+            <Route exact path="/laptop/add" component={Layouts} />
+            <Route exact path="/laptop/edit/:id" component={Layouts} />
           </Switch>
         </Router>
       </div>

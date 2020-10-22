@@ -17,7 +17,6 @@ export default function Login() {
   };
 
   const onFinish = (values) => {
-    console.log("Success:", values);
     setLoading(true);
     Auth.login(values.username, values.password)
       .then((res) => {
@@ -45,7 +44,6 @@ export default function Login() {
   return (
     <div>
       <div
-        className="layout"
         style={{
           backgroundColor: "#001529",
           height: "100vh",
@@ -55,20 +53,18 @@ export default function Login() {
         }}
       >
         <div
-          className="content"
           style={{
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            height: "65%",
-            width: "65%",
+            height: "75%",
+            width: "75%",
             alignItems: "center",
             backgroundColor: "white",
             borderRadius: 10,
           }}
         >
           <div
-            className="logo"
             style={{
               display: "flex",
               flexDirection: "column",
@@ -78,7 +74,7 @@ export default function Login() {
               height: 300,
               backgroundColor: "#001529",
               borderRadius: "100%",
-              marginTop: -200,
+              marginTop: -300,
             }}
           >
             <img
@@ -90,7 +86,6 @@ export default function Login() {
             ></img>
           </div>
           <div
-            className="login"
             style={{
               marginTop: 50,
             }}
