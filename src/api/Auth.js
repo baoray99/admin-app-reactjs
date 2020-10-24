@@ -9,6 +9,7 @@ function login(username, password) {
       })
       .then((res) => {
         resolve(res);
+        localStorage.setItem("token", JSON.stringify(res.data.token))
       })
       .catch((err) => {
         reject(err);

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import logo from "../assets/logo3.png";
 import { Form, Input, Button, Checkbox } from "antd";
 import Auth from "../api/Auth";
-import { useHistory } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import { Modal } from "antd";
 
 export default function Login() {
@@ -15,7 +15,6 @@ export default function Login() {
   const tailLayout = {
     wrapperCol: { offset: 6, span: 12 }, //offset la vi tri
   };
-
   const onFinish = (values) => {
     setLoading(true);
     Auth.login(values.username, values.password)
@@ -34,12 +33,14 @@ export default function Login() {
       content: "Login Successfully",
     });
   }
-
   function error() {
     Modal.error({
       title: "ERROR",
       content: "Login Fail",
     });
+  }
+  if (localStorage.getItem("token")) {
+    return <Redirect to="/home" />;
   }
   return (
     <div>

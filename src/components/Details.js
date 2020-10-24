@@ -1,5 +1,5 @@
 import React from "react";
-import { Drawer, Divider, Col, Row, Image } from "antd";
+import { Drawer, Divider, Col, Row, Image, Tabs } from "antd";
 
 export default function Details(props) {
   const onClose = props.onClose;
@@ -12,6 +12,7 @@ export default function Details(props) {
       </p>
     </div>
   );
+  const { TabPane } = Tabs;
   return (
     <div>
       <Drawer
@@ -63,15 +64,25 @@ export default function Details(props) {
           </Col>
         </Row>
         <Row>
-          <Col span={8} style={{ display: "flex", padding: 10 }}>
-            <Image width={200} src={item.Image} />
-          </Col>
-          <Col span={8} style={{ display: "flex", padding: 10 }}>
-            <Image width={200} src={item.Image} />
-          </Col>
-          <Col span={8} style={{ display: "flex", padding: 10 }}>
-            <Image width={200} src={item.Image} />
-          </Col>
+          <Tabs
+            defaultActiveKey="1"
+            tabPosition={"left"}
+            style={{ height: 220 }}
+          >
+            <TabPane tab="Image 1" key="1">
+              <Image height="220px" width="220px" src={item.Image} />
+            </TabPane>
+            <TabPane tab="Image 2" key="2">
+              <Image height="220px" width="220px" src={item.Image} />{" "}
+            </TabPane>
+            <TabPane tab="Image 3" key="3">
+              <Image height="220px" width="220px" src={item.Image} />
+            </TabPane>
+            <TabPane tab="Image 4" key="4">
+              <Image height="220px" width="220px" src={item.Image} />
+            </TabPane>
+            ))
+          </Tabs>
         </Row>
         <Row>
           <Col span={24}>

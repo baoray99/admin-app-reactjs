@@ -30,14 +30,16 @@ import {
 import logo from "../assets/logo3.png";
 import "./index.css";
 import React, { useState } from "react";
-import {useHistory} from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 
 export default function Layouts() {
   const { Header, Content, Sider } = Layout;
-  const history= useHistory();
-  const logout=()=>{
-    history.push('/')
-  }
+  const history = useHistory();
+  const logout = () => {
+    localStorage.clear();
+    history.push("/login")
+  };
+  
   const { SubMenu } = Menu;
   const { Search } = Input;
   const suffix = (
