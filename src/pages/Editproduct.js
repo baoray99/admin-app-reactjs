@@ -19,11 +19,10 @@ export default function Editproduct(props) {
   const [loading, setLoading] = useState(false);
   const [productDetail, setProductDetail] = useState(null);
   const history = useHistory();
-  console.log("props", props);
   const id = props.match.params.id;
   useEffect(() => {
     ProductsAPI.getProductbyId(id).then((res) => {
-      console.log("data", res);
+      // console.log("data", res);
       setProductDetail(res.data);
       setName(res.data.name)
       setBrand(res.data.brand)

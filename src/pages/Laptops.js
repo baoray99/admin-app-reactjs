@@ -4,15 +4,24 @@ import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import ProductsAPI from "../api/ProductsAPI";
 import Details from "../components/Details";
+import AddDrawer from "../components/AddDrawer";
 
 export default function Laptops() {
   const title = "LAPTOP";
+  const titleAdd = "ADD LAPTOP";
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [addvisible, setAddvisible] = useState(false);
   const onClose = () => {
     setVisible(false);
+  };
+  const onClosed = () => {
+    setAddvisible(!addvisible);
+  };
+  const addopen = () => {
+    setAddvisible(!addvisible);
   };
   const onSelectedItem = (record) => {
     setSelectedItem(record);
@@ -23,7 +32,6 @@ export default function Laptops() {
       content: "Delete Successfully",
     });
   }
-
   function error() {
     Modal.error({
       title: "ERROR",
@@ -35,12 +43,12 @@ export default function Laptops() {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      render: (text) => <a>{text}</a>,
     },
     {
       title: "Brand",
       dataIndex: "brand",
       key: "brand",
+      render: (brand) => <div>{brand.name}</div>,
     },
     {
       title: "Price",
@@ -66,11 +74,6 @@ export default function Laptops() {
       //     })}
       //   </>
       // ),
-    },
-    {
-      title: "Origin",
-      dataIndex: "madeIn",
-      key: "madeIn",
     },
     {
       title: "Quantity",
@@ -130,7 +133,6 @@ export default function Laptops() {
   ];
   useEffect(() => {
     ProductsAPI.getProducts().then((res) => {
-      console.log("data", res);
       setData(res.data);
       setLoading(false);
     });
@@ -150,16 +152,17 @@ export default function Laptops() {
         <div>
           <p style={{ fontSize: 24, margin: 0 }}>LAPTOPS</p>
         </div>
-        <Link target="_top" to="/laptop/add">
-          <Button
-            type="primary"
-            shape="round"
-            icon={<PlusOutlined />}
-            size={30}
-          >
-            Add new Laptop
-          </Button>
-        </Link>
+        {/* <Link target="_top" to="/laptop/add"> */}
+        <Button
+          type="primary"
+          shape="round"
+          icon={<PlusOutlined />}
+          size={30}
+          onClick={addopen}
+        >
+          Add new Laptop
+        </Button>
+        {/* </Link> */}
       </div>
       <Table columns={columns} dataSource={data} loading={loading} />
       <Details
@@ -168,6 +171,7 @@ export default function Laptops() {
         visible={visible}
         title={title}
       />
+      <AddDrawer addvisible={addvisible} onClose={onClosed} title={titleAdd} />
     </div>
   );
 }

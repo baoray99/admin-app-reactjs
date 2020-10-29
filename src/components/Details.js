@@ -1,14 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import { Drawer, Divider, Col, Row, Image, Tabs } from "antd";
-
+import _ from "lodash";
+// dung _.get(object, key) tra ve gia tri cua key cho du key o ngon ngu khac english key la string
 export default function Details(props) {
   const onClose = props.onClose;
   const visible = props.visible;
   const item = props.item;
+  const detail = props.item.product_detail;
+  const images = props.item.image;
+  var Images = [];
+  var keys = [];
+  {
+    detail && (keys = Object.keys(detail));
+  }
+  {
+    detail && (Images = Object.values(images));
+  }
+  console.log("images", Images);
   const DescriptionItem = ({ title, content }) => (
     <div className="site-description-item-profile-wrapper">
       <p className="site-description-item-profile-p-label">
-        {title}: {content}
+        <h3>{title}</h3>
+        {content}
       </p>
     </div>
   );
@@ -29,65 +42,45 @@ export default function Details(props) {
             <DescriptionItem title="Name" content={item.name} />
           </Col>
         </Row>
-        <Row>
-          <Col span={12}>
-            <DescriptionItem title="Brand" content={item.brand} />
-          </Col>
-          <Col span={12}>
-            <DescriptionItem title="Origin" content={item.madeIn} />
-          </Col>
-        </Row>
-        <Row>
-          <Col span={8}>
-            <DescriptionItem title="Price" content={item.price} />
-          </Col>
-          <Col span={8}>
-            <DescriptionItem title="Sale-price" content={item.sales_price} />
-          </Col>
-          <Col span={8}>
-            <DescriptionItem title="Quantity" content={item.quantity} />
-          </Col>
-        </Row>
         <Divider />
         <h1 className="site-description-item-profile-p">Description</h1>
         <Row>
-          <Col span={12}>
-            <DescriptionItem title="Size" content={item.size} />
-          </Col>
-          <Col span={12}>
-            <DescriptionItem title="Color" content={item.color} />
+          <Col span={24}>
+            <DescriptionItem content={item.description} />
           </Col>
         </Row>
+        <Divider />
+        <h1 className="site-description-item-profile-p">Details</h1>
         <Row>
           <Col span={24}>
-            <DescriptionItem title="Image" />
+            {keys.length > 0
+              ? keys.map((key) => {
+                  return (
+                    <DescriptionItem title={key} content={_.get(detail, key)} />
+                  );
+                })
+              : ""}
           </Col>
         </Row>
+        <Divider />
+        <h1 className="site-description-item-profile-p">Images</h1>
         <Row>
           <Tabs
-            defaultActiveKey="1"
+            defaultActiveKey="0"
             tabPosition={"left"}
             style={{ height: 220 }}
           >
-            <TabPane tab="Image 1" key="1">
-              <Image height="220px" width="220px" src={item.Image} />
-            </TabPane>
-            <TabPane tab="Image 2" key="2">
-              <Image height="220px" width="220px" src={item.Image} />{" "}
-            </TabPane>
-            <TabPane tab="Image 3" key="3">
-              <Image height="220px" width="220px" src={item.Image} />
-            </TabPane>
-            <TabPane tab="Image 4" key="4">
-              <Image height="220px" width="220px" src={item.Image} />
-            </TabPane>
-            ))
+            {Images.length > 0
+              ? Images.map((Imagee, index) => {
+                  return (
+                    <TabPane tab={index + 1} key={index}>
+                      <Image height="220px" width="300px" src={Imagee} />
+                      <p>{Imagee}</p>
+                    </TabPane>
+                  );
+                })
+              : ""}
           </Tabs>
-        </Row>
-        <Row>
-          <Col span={24}>
-            <DescriptionItem title="Description" content={item.description} />
-          </Col>
         </Row>
       </Drawer>
     </div>

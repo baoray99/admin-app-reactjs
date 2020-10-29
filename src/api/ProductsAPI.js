@@ -3,9 +3,8 @@ import axios from "axios";
 function getProducts() {
   return new Promise(function (resolve, reject) {
     axios
-      .get("https://5f83fcb76b97440016f4ed69.mockapi.io/products/products")
+      .get("http://dacnpm-test.herokuapp.com/products")
       .then((res) => {
-        console.log("res", res);
         resolve(res);
       })
       .catch((err) => {
@@ -21,7 +20,6 @@ function getProductbyId(id) {
         `https://5f83fcb76b97440016f4ed69.mockapi.io/products/products/${id}`
       )
       .then((res) => {
-        console.log("res", res);
         resolve(res);
       })
       .catch((err) => {
@@ -45,7 +43,7 @@ function postProduct(product) {
       });
   });
 }
-function updateProduct(id, product){
+function updateProduct(id, product) {
   return new Promise(function (resolve, reject) {
     axios
       .put(
@@ -60,11 +58,11 @@ function updateProduct(id, product){
       });
   });
 }
-function deleteProductbyId(id){
+function deleteProductbyId(id) {
   return new Promise(function (resolve, reject) {
     axios
       .delete(
-        `https://5f83fcb76b97440016f4ed69.mockapi.io/products/products/${id}`,
+        `https://5f83fcb76b97440016f4ed69.mockapi.io/products/products/${id}`
       )
       .then((res) => {
         resolve(res);

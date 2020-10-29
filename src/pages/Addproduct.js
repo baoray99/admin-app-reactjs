@@ -5,7 +5,7 @@ import { Input, Divider, Col, Row, Button, Select, Modal } from "antd";
 const { TextArea } = Input;
 const { Option } = Select;
 
-export default function Addproduct() {
+export default function Addproduct(props) {
   const [name, setName] = useState("");
   const [brand, setBrand] = useState("");
   const [price, setPrice] = useState();
@@ -61,7 +61,7 @@ export default function Addproduct() {
   return (
     <div>
       <Divider orientation="center">
-        <h1>LAPTOP</h1>
+        <h1>{props.title}</h1>
       </Divider>
       <Row
         style={{

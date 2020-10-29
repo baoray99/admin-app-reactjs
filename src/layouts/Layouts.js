@@ -17,6 +17,7 @@ import Home from "../pages/Home";
 import Customers from "../pages/Customers";
 import AddLaptop from "../pages/Addproduct";
 import EditLaptop from "../pages/Editproduct";
+import CategoriesAPI from "../api/CategoriesAPI";
 import {
   UnorderedListOutlined,
   HomeOutlined,
@@ -29,17 +30,17 @@ import {
 } from "@ant-design/icons";
 import logo from "../assets/logo3.png";
 import "./index.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import Item from "antd/lib/list/Item";
 
 export default function Layouts() {
   const { Header, Content, Sider } = Layout;
   const history = useHistory();
   const logout = () => {
     localStorage.clear();
-    history.push("/login")
+    history.push("/login");
   };
-  
   const { SubMenu } = Menu;
   const { Search } = Input;
   const suffix = (
@@ -88,6 +89,12 @@ export default function Layouts() {
       </Menu.Item>
     </Menu>
   );
+  const [categories, setCategories] = useState(null);
+  useEffect(() => {
+    CategoriesAPI.getCategories().then((res) => {
+      setCategories(res.data);
+    });
+  }, []);
   return (
     <div>
       <Router>
@@ -157,57 +164,65 @@ export default function Layouts() {
           </div>
         </Header>
         <Layout style={{ minHeight: "690px" }}>
-          <Sider
-            breakpoint="lg"
-            theme="dark"
-            style={{
-              marginTop: 64,
-              position: "fixed",
-              zIndex: 1,
-              width: "100%",
-              height: "100%",
-            }}
-            collapsible
-            collapsed={collapsed}
-            onCollapse={onCollapse}
-          >
-            <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
-              <Menu.Item key="1" icon={<HomeOutlined />}>
-                <Link to="/home"> Home </Link>
-              </Menu.Item>
-              <SubMenu
-                key="sub2"
-                icon={<UnorderedListOutlined />}
-                title="Categories"
-              >
-                <Menu.Item key="2" icon={<LaptopOutlined />}>
-                  <Link to="/laptops"> Laptop </Link>
+          {categories && (
+            <Sider
+              breakpoint="lg"
+              theme="dark"
+              style={{
+                marginTop: 64,
+                position: "fixed",
+                zIndex: 1,
+                width: "100%",
+                height: "100%",
+              }}
+              collapsible
+              collapsed={collapsed}
+              onCollapse={onCollapse}
+            >
+              <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
+                <Menu.Item key="1" icon={<HomeOutlined />}>
+                  <Link to="/home"> Home </Link>
                 </Menu.Item>
+                <SubMenu
+                  key="sub2"
+                  icon={<UnorderedListOutlined />}
+                  title="Categories"
+                >
+                  <Menu.Item key="2" icon={<LaptopOutlined />}>
+                    <Link to="/laptops">{categories[0].name} </Link>
+                  </Menu.Item>
 
-                <Menu.Item key="3" icon={<DesktopOutlined />}>
-                  <Link to="/pcs"> PC </Link>
-                </Menu.Item>
-                <Menu.Item key="4" icon={<FontAwesomeIcon icon={faKeyboard} />}>
-                  <Link to="/keyboards"> &nbsp; Keyboard </Link>
-                </Menu.Item>
-                <Menu.Item key="5" icon={<FontAwesomeIcon icon={faMouse} />}>
-                  <Link to="/mouses"> &nbsp; Mouses </Link>{" "}
-                </Menu.Item>
-                <Menu.Item key="6" icon={<FontAwesomeIcon icon={faTv} />}>
-                  <Link to="/monitors"> &nbsp; Monitors </Link>{" "}
-                </Menu.Item>
-                <Menu.Item key="7" icon={<FontAwesomeIcon icon={faSdCard} />}>
-                  <Link to="/graphiccards"> &nbsp; GraphicCards </Link>{" "}
-                </Menu.Item>
-              </SubMenu>
-              <SubMenu key="sub3" icon={<UserOutlined />} title="Users">
-                <Menu.Item key="8">
-                  <Link to="/customers"> Customers </Link>
-                </Menu.Item>
-                <Menu.Item key="9">Salers</Menu.Item>
-              </SubMenu>
-            </Menu>
-          </Sider>
+                  <Menu.Item key="3" icon={<DesktopOutlined />}>
+                    <Link to="/pcs"> {categories[1].name} </Link>
+                  </Menu.Item>
+                  <Menu.Item
+                    key="4"
+                    icon={<FontAwesomeIcon icon={faKeyboard} />}
+                  >
+                    <Link to="/keyboards"> &nbsp; {categories[2].name} </Link>
+                  </Menu.Item>
+                  <Menu.Item key="5" icon={<FontAwesomeIcon icon={faMouse} />}>
+                    <Link to="/mouses"> &nbsp; {categories[3].name} </Link>{" "}
+                  </Menu.Item>
+                  <Menu.Item key="6" icon={<FontAwesomeIcon icon={faTv} />}>
+                    <Link to="/monitors"> &nbsp; {categories[4].name} </Link>{" "}
+                  </Menu.Item>
+                  <Menu.Item key="7" icon={<FontAwesomeIcon icon={faSdCard} />}>
+                    <Link to="/graphiccards">
+                      {" "}
+                      &nbsp; {categories[5].name}{" "}
+                    </Link>{" "}
+                  </Menu.Item>
+                </SubMenu>
+                <SubMenu key="sub3" icon={<UserOutlined />} title="Users">
+                  <Menu.Item key="8">
+                    <Link to="/customers"> Customers </Link>
+                  </Menu.Item>
+                  <Menu.Item key="9">Salers</Menu.Item>
+                </SubMenu>
+              </Menu>
+            </Sider>
+          )}
           <Layout style={{ backgroundColor: "white" }}>
             <Switch>
               <Content
