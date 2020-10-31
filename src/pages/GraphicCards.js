@@ -5,7 +5,8 @@ import { useState, useEffect } from "react";
 import Details from "../components/Details";
 import ProductsAPI from "../api/ProductsAPI";
 
-export default function GraphicCards() {
+export default function GraphicCards(props) {
+  const id = props.match.params.id;
   const title = "Graphic Card";
   const columns = [
     {
@@ -18,6 +19,7 @@ export default function GraphicCards() {
       title: "Brand",
       dataIndex: "brand",
       key: "brand",
+      render: (brand)=><div>{brand.name}</div>
     },
 
     {
@@ -29,11 +31,6 @@ export default function GraphicCards() {
       title: "Sale_Price",
       key: "sales_price",
       dataIndex: "sales_price",
-    },
-    {
-      title: "Origin",
-      dataIndex: "madeIn",
-      key: "madeIn",
     },
     {
       title: "Quantity",
@@ -93,7 +90,7 @@ export default function GraphicCards() {
     setVisible(true);
   };
   useEffect(() => {
-    ProductsAPI.getProducts().then((res) => {
+    ProductsAPI.getProducts(id).then((res) => {
       console.log("data", res);
       setData(res.data);
       setLoading(false);

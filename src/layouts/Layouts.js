@@ -1,12 +1,13 @@
 import { Layout, Menu, Avatar, Input, Dropdown } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import {
-  faKeyboard,
-  faMouse,
-  faSdCard,
-  faTv,
-} from "@fortawesome/free-solid-svg-icons";
+// import {
+//   faKeyboard,
+//   faMouse,
+//   faSdCard,
+//   faCoffee,
+//   faTv,
+// } from "@fortawesome/free-solid-svg-icons";
 import Laptops from "../pages/Laptops";
 import Pcs from "../pages/Pcs";
 import Keyboards from "../pages/Keyboards";
@@ -32,17 +33,26 @@ import logo from "../assets/logo3.png";
 import "./index.css";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import Item from "antd/lib/list/Item";
 
 export default function Layouts() {
+  const [categories, setCategories] = useState();
+  const [collapsed, setCollapsed] = useState(false);
   const { Header, Content, Sider } = Layout;
+  const { SubMenu } = Menu;
+  const { Search } = Input;
   const history = useHistory();
   const logout = () => {
     localStorage.clear();
     history.push("/login");
   };
-  const { SubMenu } = Menu;
-  const { Search } = Input;
+
+  useEffect(() => {
+    CategoriesAPI.getCategories().then((res) => {
+      setCategories(res.data);
+      // console.log(res.data)
+    });
+  }, []);
+
   const suffix = (
     <AudioOutlined
       style={{
@@ -51,7 +61,7 @@ export default function Layouts() {
       }}
     />
   );
-  const [collapsed, setCollapsed] = useState(false);
+
   const onCollapse = (collapsed) => {
     setCollapsed(collapsed);
   };
@@ -89,12 +99,7 @@ export default function Layouts() {
       </Menu.Item>
     </Menu>
   );
-  const [categories, setCategories] = useState(null);
-  useEffect(() => {
-    CategoriesAPI.getCategories().then((res) => {
-      setCategories(res.data);
-    });
-  }, []);
+
   return (
     <div>
       <Router>
@@ -188,31 +193,16 @@ export default function Layouts() {
                   icon={<UnorderedListOutlined />}
                   title="Categories"
                 >
-                  <Menu.Item key="2" icon={<LaptopOutlined />}>
-                    <Link to="/laptops">{categories[0].name} </Link>
-                  </Menu.Item>
-
-                  <Menu.Item key="3" icon={<DesktopOutlined />}>
-                    <Link to="/pcs"> {categories[1].name} </Link>
-                  </Menu.Item>
-                  <Menu.Item
-                    key="4"
-                    icon={<FontAwesomeIcon icon={faKeyboard} />}
-                  >
-                    <Link to="/keyboards"> &nbsp; {categories[2].name} </Link>
-                  </Menu.Item>
-                  <Menu.Item key="5" icon={<FontAwesomeIcon icon={faMouse} />}>
-                    <Link to="/mouses"> &nbsp; {categories[3].name} </Link>{" "}
-                  </Menu.Item>
-                  <Menu.Item key="6" icon={<FontAwesomeIcon icon={faTv} />}>
-                    <Link to="/monitors"> &nbsp; {categories[4].name} </Link>{" "}
-                  </Menu.Item>
-                  <Menu.Item key="7" icon={<FontAwesomeIcon icon={faSdCard} />}>
-                    <Link to="/graphiccards">
-                      {" "}
-                      &nbsp; {categories[5].name}{" "}
-                    </Link>{" "}
-                  </Menu.Item>
+                  {categories.map((category, index) => {
+                    return (
+                      <Menu.Item key={index + 2} >
+                        {/* icon={<FontAwesomeIcon icon={faCoffee} />} */}
+                        <Link to={`/products/${category.name}/${category._id}`}>
+                          {category.name}{" "}
+                        </Link>
+                      </Menu.Item>
+                    );
+                  })}
                 </SubMenu>
                 <SubMenu key="sub3" icon={<UserOutlined />} title="Users">
                   <Menu.Item key="8">
@@ -234,12 +224,24 @@ export default function Layouts() {
                 }}
               >
                 <Route exact path="/home" component={Home} />
-                <Route exact path="/laptops" component={Laptops} />
-                <Route exact path="/pcs" component={Pcs} />
-                <Route exact path="/keyboards" component={Keyboards} />
-                <Route exact path="/mouses" component={Mouses} />
-                <Route exact path="/monitors" component={Monitors} />
-                <Route exact path="/graphiccards" component={GraphicCards} />
+                <Route exact path="/products/Laptop/:id" component={Laptops} />
+                <Route exact path="/products/Pc/:id" component={Pcs} />
+                <Route
+                  exact
+                  path="/products/Keyboard/:id"
+                  component={Keyboards}
+                />
+                <Route exact path="/products/Mouses/:id" component={Mouses} />
+                <Route
+                  exact
+                  path="/products/Monitors/:id"
+                  component={Monitors}
+                />
+                <Route
+                  exact
+                  path="/products/GraphicCards/:id"
+                  component={GraphicCards}
+                />
                 <Route exact path="/customers" component={Customers} />
                 <Route exact path="/laptop/add" component={AddLaptop} />
                 <Route exact path="/laptop/edit/:id" component={EditLaptop} />

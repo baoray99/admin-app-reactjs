@@ -5,7 +5,8 @@ import { useState, useEffect } from "react";
 import Details from "../components/Details";
 import ProductsAPI from "../api/ProductsAPI";
 
-export default function Keyboards() {
+export default function Keyboards(props) {
+  const id = props.match.params.id;
   const title = "Keyboard";
   const columns = [
     {
@@ -18,6 +19,7 @@ export default function Keyboards() {
       title: "Brand",
       dataIndex: "brand",
       key: "brand",
+      render: (brand)=><div>{brand.name}</div>
     },
 
     {
@@ -29,11 +31,6 @@ export default function Keyboards() {
       title: "Sale_Price",
       key: "sales_price",
       dataIndex: "sales_price",
-    },
-    {
-      title: "Origin",
-      dataIndex: "madeIn",
-      key: "madeIn",
     },
     {
       title: "Quantity",
@@ -93,7 +90,7 @@ export default function Keyboards() {
     setVisible(true);
   };
   useEffect(() => {
-    ProductsAPI.getProducts().then((res) => {
+    ProductsAPI.getProducts(id).then((res) => {
       console.log("data", res);
       setData(res.data);
       setLoading(false);

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Drawer, Divider, Col, Row, Image, Tabs } from "antd";
 import _ from "lodash";
+import ShowMore from "react-show-more";
 // dung _.get(object, key) tra ve gia tri cua key cho du key o ngon ngu khac english key la string
 export default function Details(props) {
   const onClose = props.onClose;
@@ -16,7 +17,6 @@ export default function Details(props) {
   {
     detail && (Images = Object.values(images));
   }
-  console.log("images", Images);
   const DescriptionItem = ({ title, content }) => (
     <div className="site-description-item-profile-wrapper">
       <p className="site-description-item-profile-p-label">
@@ -43,26 +43,6 @@ export default function Details(props) {
           </Col>
         </Row>
         <Divider />
-        <h1 className="site-description-item-profile-p">Description</h1>
-        <Row>
-          <Col span={24}>
-            <DescriptionItem content={item.description} />
-          </Col>
-        </Row>
-        <Divider />
-        <h1 className="site-description-item-profile-p">Details</h1>
-        <Row>
-          <Col span={24}>
-            {keys.length > 0
-              ? keys.map((key) => {
-                  return (
-                    <DescriptionItem title={key} content={_.get(detail, key)} />
-                  );
-                })
-              : ""}
-          </Col>
-        </Row>
-        <Divider />
         <h1 className="site-description-item-profile-p">Images</h1>
         <Row>
           <Tabs
@@ -81,6 +61,34 @@ export default function Details(props) {
                 })
               : ""}
           </Tabs>
+        </Row>
+        <Divider />
+        <h1 className="site-description-item-profile-p">Details</h1>
+        <Row>
+          <Col span={24}>
+            {keys.length > 0
+              ? keys.map((key) => {
+                  return (
+                    <DescriptionItem title={key} content={_.get(detail, key)} />
+                  );
+                })
+              : ""}
+          </Col>
+        </Row>
+        <Divider />
+        <h1 className="site-description-item-profile-p">Description</h1>
+        <Row>
+          <Col span={24}>
+            {/* <DescriptionItem content={item.description} /> */}
+            <ShowMore
+              lines={2}
+              more="Show more"
+              less="Show less"
+              anchorClass=""
+            >
+              {item.description}
+            </ShowMore>
+          </Col>
         </Row>
       </Drawer>
     </div>

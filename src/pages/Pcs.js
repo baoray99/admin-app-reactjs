@@ -4,22 +4,24 @@ import React from "react";
 import { useState, useEffect } from "react";
 import Details from "../components/Details";
 import ProductsAPI from "../api/ProductsAPI";
+import AddDrawer from "../components/AddDrawer";
 
-export default function Pcs() {
+export default function Pcs(props) {
+  const id = props.match.params.id;
   const title = "PC";
+  const titleAdd = "ADD PC";
   const columns = [
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      render: (text) => <a>{text}</a>,
     },
     {
       title: "Brand",
       dataIndex: "brand",
       key: "brand",
+      render: (brand)=><div>{brand.name}</div>
     },
-
     {
       title: "Price",
       dataIndex: "price",
@@ -29,11 +31,6 @@ export default function Pcs() {
       title: "Sale_Price",
       key: "sales_price",
       dataIndex: "sales_price",
-    },
-    {
-      title: "Origin",
-      dataIndex: "madeIn",
-      key: "madeIn",
     },
     {
       title: "Quantity",
@@ -71,19 +68,16 @@ export default function Pcs() {
       width: 200,
     },
   ];
-  const DescriptionItem = ({ title, content }) => (
-    <div className="site-description-item-profile-wrapper">
-      <p className="site-description-item-profile-p-label">
-        {title}:{content}
-      </p>
-    </div>
-  );
   const [visible, setVisible] = useState(false);
-  const showDrawer = () => {
-    setVisible(true);
-  };
+  const [addvisible, setAddvisible] = useState(false);
   const onClose = () => {
     setVisible(false);
+  };
+  const onClosed = () => {
+    setAddvisible(!addvisible);
+  };
+  const addopen = () => {
+    setAddvisible(!addvisible);
   };
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
@@ -93,7 +87,7 @@ export default function Pcs() {
     setVisible(true);
   };
   useEffect(() => {
-    ProductsAPI.getProducts().then((res) => {
+    ProductsAPI.getProducts(id).then((res) => {
       console.log("data", res);
       setData(res.data);
       setLoading(false);
@@ -114,7 +108,7 @@ export default function Pcs() {
         <div>
           <p style={{ fontSize: 24, margin: 0 }}>PCs</p>
         </div>
-        <Button type="primary" shape="round" icon={<PlusOutlined />} size={30}>
+        <Button type="primary" shape="round" icon={<PlusOutlined />} size={30} onClick={addopen}>
           Add new PC
         </Button>
       </div>
@@ -125,6 +119,7 @@ export default function Pcs() {
         visible={visible}
         title={title}
       />
+      <AddDrawer addvisible={addvisible} onClose={onClosed} title={titleAdd} />
     </div>
   );
 }

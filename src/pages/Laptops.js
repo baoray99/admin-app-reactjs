@@ -6,7 +6,8 @@ import ProductsAPI from "../api/ProductsAPI";
 import Details from "../components/Details";
 import AddDrawer from "../components/AddDrawer";
 
-export default function Laptops() {
+export default function Laptops(props) {
+  const id = props.match.params.id;
   const title = "LAPTOP";
   const titleAdd = "ADD LAPTOP";
   const [data, setData] = useState([]);
@@ -132,7 +133,7 @@ export default function Laptops() {
     },
   ];
   useEffect(() => {
-    ProductsAPI.getProducts().then((res) => {
+    ProductsAPI.getProducts(id).then((res) => {
       setData(res.data);
       setLoading(false);
     });
