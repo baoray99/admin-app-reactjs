@@ -202,7 +202,9 @@ export default function Layouts() {
                     return (
                       <Menu.Item>
                         {/* icon={<FontAwesomeIcon icon={faCoffee} />} */}
-                        <Link to={`/products/${category.name}/${category._id}`}>
+                        <Link
+                          to={`/products/category/${category.name}/${category._id}`}
+                        >
                           {category.name}{" "}
                         </Link>
                       </Menu.Item>
@@ -218,7 +220,7 @@ export default function Layouts() {
                     return (
                       <Menu.Item>
                         {/* icon={<FontAwesomeIcon icon={faCoffee} />} */}
-                        <Link to={`/products/${brand.name}/${brand._id}`}>
+                        <Link to={`/products/brand/${brand.name}/${brand._id}`}>
                           {brand.name}{" "}
                         </Link>
                       </Menu.Item>
@@ -245,27 +247,35 @@ export default function Layouts() {
                 }}
               >
                 <Route exact path="/home" component={Home} />
-                <Route exact path="/products/Laptop/:id" component={Laptops} />
-                <Route exact path="/products/Pc/:id" component={Pcs} />
                 <Route
                   exact
-                  path="/products/Keyboard/:id"
+                  path="/products/category/Laptop/:id"
+                  component={Laptops}
+                />
+                <Route exact path="/products/category/Pc/:id" component={Pcs} />
+                <Route
+                  exact
+                  path="/products/category/Keyboard/:id"
                   component={Keyboards}
                 />
-                <Route exact path="/products/Mouses/:id" component={Mouses} />
                 <Route
                   exact
-                  path="/products/Monitors/:id"
+                  path="/products/category/Mouses/:id"
+                  component={Mouses}
+                />
+                <Route
+                  exact
+                  path="/products/category/Monitors/:id"
                   component={Monitors}
                 />
                 <Route
                   exact
-                  path="/products/GraphicCards/:id"
+                  path="/products/category/GraphicCards/:id"
                   component={GraphicCards}
                 />
                 <Route
                   exact
-                  path="/products/:name/:id"
+                  path="/products/brand/:name/:id"
                   component={ProductByBrand}
                 />
 
