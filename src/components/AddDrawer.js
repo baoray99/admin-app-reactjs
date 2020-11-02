@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import ProductsAPI from "../api/ProductsAPI";
+import CategoryAPI from "../api/CategoriesAPI";
+import BrandAPI from "../api/BrandAPI";
 import {
   Drawer,
   Col,
@@ -9,34 +11,37 @@ import {
   Button,
   Select,
   Modal,
+  Table,
+  Popconfirm,
+  Form,
 } from "antd";
+import EditableTable from "./AddDetailProduct";
+import EditImage from "./AddImageProduct";
 const { TextArea } = Input;
 const { Option } = Select;
-
 export default function AddDrawer(props) {
-  const [name, setName] = useState("");
-  const [brand, setBrand] = useState("");
-  const [price, setPrice] = useState();
-  const [saleprice, setSaleprice] = useState();
-  const [origin, setOrigin] = useState("");
-  const [quantity, setQuantity] = useState();
-  const [size, setSize] = useState("");
-  const [color, setColor] = useState("");
-  const [image, setImage] = useState("");
-  const [description, setDescription] = useState("");
+  const [brands, setBrands] = useState([]);
+  const [cates, getCates] = useState([]);
+  // const [name, setName] = useState("");
+  // const [brand, setBrand] = useState("");
+  // const [price, setPrice] = useState();
+  // const [saleprice, setSaleprice] = useState();
+  // const [quantity, setQuantity] = useState();
+  // const [images, setImages] = useState([]);
+  // const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const onClosed = props.onClose;
   const addvisible = props.addvisible;
-  const titleAdd=props.title;
-  const onChange = (value) => {
-    setColor(value);
-  };
+  const titleAdd = props.title;
+
+  // const onChange = (value) => {
+  //   setBrand(value);
+  // };
   function success() {
     Modal.success({
       content: "Add Successfully",
     });
   }
-
   function error() {
     Modal.error({
       title: "ERROR",
@@ -45,29 +50,36 @@ export default function AddDrawer(props) {
   }
   const onFinish = () => {
     setLoading(true);
-    const product = {
-      name: name,
-      brand: brand,
-      price: price,
-      sales_price: saleprice,
-      madeIn: origin,
-      quantity: quantity,
-      size: size,
-      color: color,
-      Image: image,
-      description: description,
-    };
-    ProductsAPI.postProduct(product)
-      .then((res) => {
-        success();
-        setLoading(false);
-        setTimeout(() => window.location.reload(), 2000);
-      })
-      .catch((err) => {
-        error();
-        setLoading(false);
-      });
+    // const product = {
+    //   name: name,
+    //   brand: brand,
+    //   price: price,
+    //   sales_price: saleprice,
+    //   quantity: quantity,
+    //   Image: images,
+    //   description: description,
+    // };
+    // ProductsAPI.postProduct(product)
+    //   .then((res) => {
+    //     success();
+    //     setLoading(false);
+    //     setTimeout(() => window.location.reload(), 2000);
+    //   })
+    //   .catch((err) => {
+    //     error();
+    //     setLoading(false);
+    //   });
   };
+  useEffect(() => {
+    BrandAPI.getBrands().then((res) => {
+      setBrands(res.data);
+    });
+  }, []);
+  useEffect(() => {
+    CategoryAPI.getCategories().then((res) => {
+      getCates(res.data);
+    });
+  }, []);
   return (
     <div>
       <Drawer
@@ -91,7 +103,7 @@ export default function AddDrawer(props) {
           <Col span={24} style={{ display: "flex" }}>
             <h3>Name: </h3>
             <Input
-              onChange={(e) => setName(e.target.value)}
+              // onChange={(e) => setName(e.target.value)}
               style={{ marginLeft: 10 }}
             ></Input>
           </Col>
@@ -105,22 +117,38 @@ export default function AddDrawer(props) {
           }}
         >
           <Col span={12} style={{ display: "flex", paddingRight: 15 }}>
-            <h3>Brand: </h3>
-            <Input
-              onChange={(e) => {
-                setBrand(e.target.value);
-              }}
+            <h3>Category: </h3>
+            <Select
+              showSearch
               style={{ marginLeft: 10 }}
-            ></Input>
+              placeholder="Select category"
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+              // onChange={onChange}
+            >
+              {cates.map((catee) => {
+                return <Option value={catee.name}>{catee.name}</Option>;
+              })}
+            </Select>
           </Col>
-          <Col span={12} style={{ display: "flex", paddingLeft: 15 }}>
-            <h3>Origin: </h3>
-            <Input
-              onChange={(e) => {
-                setOrigin(e.target.value);
-              }}
+          <Col span={12} style={{ display: "flex", paddingRight: 15 }}>
+            <h3>Brand: </h3>
+            <Select
+              showSearch
               style={{ marginLeft: 10 }}
-            ></Input>
+              placeholder="Select brand"
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+              // onChange={onChange}
+            >
+              {brands.map((brandd) => {
+                return <Option value={brandd.name}>{brandd.name}</Option>;
+              })}
+            </Select>
           </Col>
         </Row>
         <Row
@@ -134,66 +162,23 @@ export default function AddDrawer(props) {
           <Col span={12} style={{ display: "flex", paddingRight: 15 }}>
             <h3>Price: </h3>
             <Input
-              onChange={(e) => {
-                setPrice(e.target.value);
-              }}
+              // onChange={(e) => {
+              //   setPrice(e.target.value);
+              // }}
               style={{ marginLeft: 10, height: 33.79 }}
             ></Input>
           </Col>
           <Col span={12} style={{ display: "flex", paddingLeft: 15 }}>
             <h3>Sale-price: </h3>
             <Input
-              onChange={(e) => {
-                setSaleprice(e.target.value);
-              }}
+              // onChange={(e) => {
+              //   setSaleprice(e.target.value);
+              // }}
               style={{ marginLeft: 10, height: 33.79 }}
             ></Input>
           </Col>
         </Row>
-        <Row
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            marginBottom: 20,
-          }}
-        >
-          <Col span={8} style={{ display: "flex", paddingRight: 15 }}>
-            <h3>Size: </h3>
-            <Input
-              onChange={(e) => {
-                setSize(e.target.value);
-              }}
-              style={{ marginLeft: 10, height: 33.79 }}
-            ></Input>
-          </Col>
-          <Col span={8} style={{ display: "flex", paddingLeft: 15 }}>
-            <h3>Color: </h3>
-            <Select
-              showSearch
-              style={{ marginLeft: 10 }}
-              placeholder="Select a color"
-              optionFilterProp="children"
-              filterOption={(input, option) =>
-                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-              }
-              onChange={onChange}
-            >
-              <Option value="red">Red</Option>
-              <Option value="black">Black</Option>
-              <Option value="gold">Gold</Option>
-            </Select>
-          </Col>
-          <Col span={8} style={{ display: "flex", paddingLeft: 15 }}>
-            <h3>Quantity: </h3>
-            <Input
-              onChange={(e) => {
-                setQuantity(e.target.value);
-              }}
-              style={{ marginLeft: 10, height: 33.79 }}
-            ></Input>
-          </Col>
-        </Row>
+
         <Row
           style={{
             display: "flex",
@@ -206,22 +191,20 @@ export default function AddDrawer(props) {
             <h3>Image: </h3>
           </Col>
         </Row>
-        <Row
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            marginBottom: 20,
-          }}
-        >
-          <Col span={24} style={{ display: "flex" }}>
-            <Input
-              onChange={(e) => {
-                setImage(e.target.value);
-              }}
-              style={{ marginLeft: 10, height: 33.79 }}
-            ></Input>
+        <Row>
+          <Col span={24}>
+            <EditImage />
           </Col>
+        </Row>
+
+        <Divider>
+          <h3>Details</h3>
+        </Divider>
+        <Row>
+          <Col span={24}>
+            <EditableTable />
+          </Col>
+          {/* <TableEdit /> */}
         </Row>
         <Row
           style={{
@@ -245,9 +228,9 @@ export default function AddDrawer(props) {
         >
           <Col span={24} style={{ display: "flex" }}>
             <TextArea
-              onChange={(e) => {
-                setDescription(e.target.value);
-              }}
+              // onChange={(e) => {
+              //   setDescription(e.target.value);
+              // }}
               rows={6}
             ></TextArea>
           </Col>

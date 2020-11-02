@@ -1,13 +1,33 @@
-import { Table, Space, Button } from "antd";
+import { Table, Space, Button, Modal } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import React from "react";
 import { useState, useEffect } from "react";
 import Details from "../components/Details";
 import ProductsAPI from "../api/ProductsAPI";
+import AddDrawer from "../components/AddDrawer";
 
 export default function Keyboards(props) {
   const id = props.match.params.id;
   const title = "Keyboard";
+  const titleAdd = "ADD KEYBOARD";
+  const [addvisible, setAddvisible] = useState(false);
+  function success() {
+    Modal.success({
+      content: "Delete Successfully",
+    });
+  }
+  function error() {
+    Modal.error({
+      title: "ERROR",
+      content: "Delete Fail",
+    });
+  }
+  const onClosed = () => {
+    setAddvisible(!addvisible);
+  };
+  const addopen = () => {
+    setAddvisible(!addvisible);
+  };
   const columns = [
     {
       title: "Name",
@@ -19,7 +39,7 @@ export default function Keyboards(props) {
       title: "Brand",
       dataIndex: "brand",
       key: "brand",
-      render: (brand)=><div>{brand.name}</div>
+      render: (brand) => <div>{brand.name}</div>,
     },
 
     {
@@ -59,7 +79,25 @@ export default function Keyboards(props) {
             Edit
             {/* {record.name} primary boi den het btn */}
           </Button>
-          <Button type="primary" danger shape="round">
+          <Button
+            type="primary"
+            danger
+            shape="round"
+            onClick={() =>
+              ProductsAPI.deleteProductbyId(record.id).then((res) => {
+                setLoading(true);
+                ProductsAPI.getProducts(id)
+                  .then((res) => {
+                    success();
+                    setData(res.data);
+                    setLoading(false);
+                  })
+                  .catch((err) => {
+                    error();
+                  });
+              })
+            }
+          >
             Delete
             {/* {record.name} primary boi den het btn */}
           </Button>
@@ -68,17 +106,7 @@ export default function Keyboards(props) {
       width: 200,
     },
   ];
-  const DescriptionItem = ({ title, content }) => (
-    <div className="site-description-item-profile-wrapper">
-      <p className="site-description-item-profile-p-label">
-        {title}:{content}
-      </p>
-    </div>
-  );
   const [visible, setVisible] = useState(false);
-  const showDrawer = () => {
-    setVisible(true);
-  };
   const onClose = () => {
     setVisible(false);
   };
@@ -111,7 +139,13 @@ export default function Keyboards(props) {
         <div>
           <p style={{ fontSize: 24, margin: 0 }}>KEYBOARDS</p>
         </div>
-        <Button type="primary" shape="round" icon={<PlusOutlined />} size={30}>
+        <Button
+          type="primary"
+          shape="round"
+          icon={<PlusOutlined />}
+          size={30}
+          onClick={addopen}
+        >
           Add new Keyboard
         </Button>
       </div>
@@ -122,6 +156,7 @@ export default function Keyboards(props) {
         visible={visible}
         title={title}
       />
+      <AddDrawer addvisible={addvisible} onClose={onClosed} title={titleAdd} />
     </div>
   );
 }

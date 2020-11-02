@@ -3,7 +3,7 @@ import axios from "axios";
   function getProducts(id) {
     return new Promise(function (resolve, reject) {
       axios
-        .get(`http://dacnpm-test.herokuapp.com/products/?id_category=${id}`)
+        .get(`http://dacnpm-test.herokuapp.com/products/?id_brand=${id}`)
         .then((res) => {
           resolve(res);
         })
@@ -17,7 +17,7 @@ import axios from "axios";
     return new Promise(function (resolve, reject) {
       axios
         .get(
-          `http://dacnpm-test.herokuapp.com/products/${id}`
+          `https://5f83fcb76b97440016f4ed69.mockapi.io/products/products/${id}`
         )
         .then((res) => {
           resolve(res);
@@ -62,7 +62,7 @@ import axios from "axios";
     return new Promise(function (resolve, reject) {
       axios
         .delete(
-          `http://dacnpm-test.herokuapp.com/products/${id}`
+          `https://5f83fcb76b97440016f4ed69.mockapi.io/products/products/${id}`
         )
         .then((res) => {
           resolve(res);

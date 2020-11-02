@@ -112,10 +112,10 @@ export default function Laptops(props) {
             onClick={() =>
               ProductsAPI.deleteProductbyId(record.id).then((res) => {
                 setLoading(true);
-                ProductsAPI.getProducts()
+                ProductsAPI.getProducts(id)
                   .then((res) => {
-                    setData(res.data);
                     success();
+                    setData(res.data);
                     setLoading(false);
                   })
                   .catch((err) => {

@@ -1,5 +1,5 @@
 import { Layout, Menu, Avatar, Input, Dropdown } from "antd";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 // import {
 //   faKeyboard,
@@ -19,12 +19,11 @@ import Customers from "../pages/Customers";
 import AddLaptop from "../pages/Addproduct";
 import EditLaptop from "../pages/Editproduct";
 import CategoriesAPI from "../api/CategoriesAPI";
+import BrandsAPI from "../api/BrandAPI";
 import {
   UnorderedListOutlined,
   HomeOutlined,
   UserOutlined,
-  LaptopOutlined,
-  DesktopOutlined,
   AudioOutlined,
   DownOutlined,
   LoginOutlined,
@@ -33,10 +32,15 @@ import logo from "../assets/logo3.png";
 import "./index.css";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import ProductByBrand from "../pages/ProductByBrand";
 
 export default function Layouts() {
   const [categories, setCategories] = useState();
-  const [collapsed, setCollapsed] = useState(false);
+  const [brands, setBrands] = useState();
+  // const [collapsed, setCollapsed] = useState(false);
+  // const onCollapse = (collapsed) => {
+  //   setCollapsed(collapsed);
+  // };
   const { Header, Content, Sider } = Layout;
   const { SubMenu } = Menu;
   const { Search } = Input;
@@ -45,7 +49,11 @@ export default function Layouts() {
     localStorage.clear();
     history.push("/login");
   };
-
+  useEffect(() => {
+    BrandsAPI.getBrands().then((res) => {
+      setBrands(res.data);
+    });
+  });
   useEffect(() => {
     CategoriesAPI.getCategories().then((res) => {
       setCategories(res.data);
@@ -62,9 +70,6 @@ export default function Layouts() {
     />
   );
 
-  const onCollapse = (collapsed) => {
-    setCollapsed(collapsed);
-  };
   const menu = (
     <Menu>
       <Menu.Item>
@@ -111,7 +116,7 @@ export default function Layouts() {
             justifyContent: "space-around",
             padding: "10px",
             position: "fixed",
-            zIndex: 1,
+            zIndex: 999,
             width: "100%",
           }}
           className="header"
@@ -120,7 +125,7 @@ export default function Layouts() {
             style={{
               display: "flex",
               flexDirection: "row",
-              justifyContent: "flex-start",
+              justifyContent: "center",
               width: "10%",
             }}
           >
@@ -168,21 +173,21 @@ export default function Layouts() {
             </Dropdown>
           </div>
         </Header>
-        <Layout style={{ minHeight: "690px" }}>
-          {categories && (
+        <Layout style={{ height: "100vh" }}>
+          {categories && brands && (
             <Sider
               breakpoint="lg"
               theme="dark"
               style={{
-                marginTop: 64,
-                position: "fixed",
+                position: "relative",
+                top: 64,
                 zIndex: 1,
-                width: "100%",
-                height: "100%",
+                height: "91.5%",
+                overflowY: "scroll",
               }}
-              collapsible
-              collapsed={collapsed}
-              onCollapse={onCollapse}
+              // collapsible
+              // collapsed={collapsed}
+              // onCollapse={onCollapse}
             >
               <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
                 <Menu.Item key="1" icon={<HomeOutlined />}>
@@ -193,9 +198,9 @@ export default function Layouts() {
                   icon={<UnorderedListOutlined />}
                   title="Categories"
                 >
-                  {categories.map((category, index) => {
+                  {categories.map((category) => {
                     return (
-                      <Menu.Item key={index + 2} >
+                      <Menu.Item>
                         {/* icon={<FontAwesomeIcon icon={faCoffee} />} */}
                         <Link to={`/products/${category.name}/${category._id}`}>
                           {category.name}{" "}
@@ -204,7 +209,23 @@ export default function Layouts() {
                     );
                   })}
                 </SubMenu>
-                <SubMenu key="sub3" icon={<UserOutlined />} title="Users">
+                <SubMenu
+                  key="sub3"
+                  icon={<UnorderedListOutlined />}
+                  title="Brands"
+                >
+                  {brands.map((brand) => {
+                    return (
+                      <Menu.Item>
+                        {/* icon={<FontAwesomeIcon icon={faCoffee} />} */}
+                        <Link to={`/products/${brand.name}/${brand._id}`}>
+                          {brand.name}{" "}
+                        </Link>
+                      </Menu.Item>
+                    );
+                  })}
+                </SubMenu>
+                <SubMenu key="sub4" icon={<UserOutlined />} title="Users">
                   <Menu.Item key="8">
                     <Link to="/customers"> Customers </Link>
                   </Menu.Item>
@@ -213,14 +234,14 @@ export default function Layouts() {
               </Menu>
             </Sider>
           )}
-          <Layout style={{ backgroundColor: "white" }}>
+          <Layout style={{ backgroundColor: "white", height: "100vh" }}>
             <Switch>
               <Content
                 style={{
                   padding: "10px",
                   backgroundColor: "white",
                   marginTop: 64,
-                  marginLeft: collapsed ? 80 : 200,
+                  // marginLeft: collapsed ? 80 : 200,
                 }}
               >
                 <Route exact path="/home" component={Home} />
@@ -242,6 +263,12 @@ export default function Layouts() {
                   path="/products/GraphicCards/:id"
                   component={GraphicCards}
                 />
+                <Route
+                  exact
+                  path="/products/:name/:id"
+                  component={ProductByBrand}
+                />
+
                 <Route exact path="/customers" component={Customers} />
                 <Route exact path="/laptop/add" component={AddLaptop} />
                 <Route exact path="/laptop/edit/:id" component={EditLaptop} />

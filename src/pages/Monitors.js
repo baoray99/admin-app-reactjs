@@ -4,10 +4,19 @@ import React from "react";
 import { useState, useEffect } from "react";
 import Details from "../components/Details";
 import ProductsAPI from "../api/ProductsAPI";
+import AddDrawer from "../components/AddDrawer";
 
 export default function Monitors(props) {
   const id = props.match.params.id;
   const title = "Monitors";
+  const titleAdd = "ADD MONITOR";
+  const [addvisible, setAddvisible] = useState(false);
+  const onClosed = () => {
+    setAddvisible(!addvisible);
+  };
+  const addopen = () => {
+    setAddvisible(!addvisible);
+  };
   const columns = [
     {
       title: "Name",
@@ -19,7 +28,7 @@ export default function Monitors(props) {
       title: "Brand",
       dataIndex: "brand",
       key: "brand",
-      render: (brand)=><div>{brand.name}</div>
+      render: (brand) => <div>{brand.name}</div>,
     },
 
     {
@@ -68,17 +77,7 @@ export default function Monitors(props) {
       width: 200,
     },
   ];
-  const DescriptionItem = ({ title, content }) => (
-    <div className="site-description-item-profile-wrapper">
-      <p className="site-description-item-profile-p-label">
-        {title}:{content}
-      </p>
-    </div>
-  );
   const [visible, setVisible] = useState(false);
-  const showDrawer = () => {
-    setVisible(true);
-  };
   const onClose = () => {
     setVisible(false);
   };
@@ -111,7 +110,13 @@ export default function Monitors(props) {
         <div>
           <p style={{ fontSize: 24, margin: 0 }}>MONITORS</p>
         </div>
-        <Button type="primary" shape="round" icon={<PlusOutlined />} size={30}>
+        <Button
+          type="primary"
+          shape="round"
+          icon={<PlusOutlined />}
+          size={30}
+          onClick={addopen}
+        >
           Add new Monitor
         </Button>
       </div>
@@ -122,6 +127,7 @@ export default function Monitors(props) {
         visible={visible}
         title={title}
       />
+      <AddDrawer addvisible={addvisible} onClose={onClosed} title={titleAdd} />
     </div>
   );
 }

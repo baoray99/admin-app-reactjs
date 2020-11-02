@@ -20,8 +20,8 @@ export default function Details(props) {
   const DescriptionItem = ({ title, content }) => (
     <div className="site-description-item-profile-wrapper">
       <p className="site-description-item-profile-p-label">
-        <h3>{title}</h3>
-        {content}
+        <b style={{ fontSize: 16 }}>{title}</b>
+        <span>: {content}</span>
       </p>
     </div>
   );

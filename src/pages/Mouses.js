@@ -4,10 +4,19 @@ import React from "react";
 import { useState, useEffect } from "react";
 import Details from "../components/Details";
 import ProductsAPI from "../api/ProductsAPI";
+import AddDrawer from "../components/AddDrawer";
 
 export default function Mouses(props) {
   const id = props.match.params.id;
   const title = "Mouses";
+  const titleAdd = "ADD MOUSE";
+  const [addvisible, setAddvisible] = useState(false);
+  const onClosed = () => {
+    setAddvisible(!addvisible);
+  };
+  const addopen = () => {
+    setAddvisible(!addvisible);
+  };
   const columns = [
     {
       title: "Name",
@@ -19,7 +28,7 @@ export default function Mouses(props) {
       title: "Brand",
       dataIndex: "brand",
       key: "brand",
-      render: (brand)=><div>{brand.name}</div>
+      render: (brand) => <div>{brand.name}</div>,
     },
 
     {
@@ -76,9 +85,6 @@ export default function Mouses(props) {
     </div>
   );
   const [visible, setVisible] = useState(false);
-  const showDrawer = () => {
-    setVisible(true);
-  };
   const onClose = () => {
     setVisible(false);
   };
@@ -111,7 +117,13 @@ export default function Mouses(props) {
         <div>
           <p style={{ fontSize: 24, margin: 0 }}>MOUSES</p>
         </div>
-        <Button type="primary" shape="round" icon={<PlusOutlined />} size={30}>
+        <Button
+          type="primary"
+          shape="round"
+          icon={<PlusOutlined />}
+          size={30}
+          onClick={addopen}
+        >
           Add new Mouse
         </Button>
       </div>
@@ -122,6 +134,7 @@ export default function Mouses(props) {
         visible={visible}
         title={title}
       />
+      <AddDrawer addvisible={addvisible} onClose={onClosed} title={titleAdd} />
     </div>
   );
 }
