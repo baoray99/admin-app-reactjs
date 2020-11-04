@@ -1,17 +1,29 @@
 import { Table, Space, Button, Modal } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import React from "react";
-import { useState, useEffect } from "react";
-import Details from "../components/Details";
+import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import ProductsAPI from "../api/ProductsAPI";
+import Details from "../components/Details";
 import AddDrawer from "../components/AddDrawer";
 
-export default function Pcs(props) {
+export default function ProductByCate(props) {
   const id = props.match.params.id;
-  const title = "PC";
-  const titleAdd = "ADD PC";
+  const [name, setName] = useState(props.match.params.name);
+  const title = name;
+  const titleAdd = `Add ${name}`;
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedItem, setSelectedItem] = useState([]);
   const [visible, setVisible] = useState(false);
   const [addvisible, setAddvisible] = useState(false);
+  useEffect(() => {
+    setName(props.match.params.name);
+    setLoading(true);
+    ProductsAPI.getProducts(id).then((res) => {
+      setData(res.data);
+      setLoading(false);
+    });
+  }, [id]);
   const onClose = () => {
     setVisible(false);
   };
@@ -21,9 +33,6 @@ export default function Pcs(props) {
   const addopen = () => {
     setAddvisible(!addvisible);
   };
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState([]);
-  const [selectedItem, setSelectedItem] = useState([]);
   const onSelectedItem = (record) => {
     setSelectedItem(record);
     setVisible(true);
@@ -60,6 +69,21 @@ export default function Pcs(props) {
       title: "Sale_Price",
       key: "sales_price",
       dataIndex: "sales_price",
+      // render: (tags) => (
+      //   <>
+      //     {tags.map((tag) => {
+      //       let color = tag.length > 5 ? "geekblue" : "green";
+      //       if (tag === "loser") {
+      //         color = "volcano";
+      //       }
+      //       return (
+      //         <Tag color={color} key={tag}>
+      //           {tag.toUpperCase()}
+      //         </Tag>
+      //       );
+      //     })}
+      //   </>
+      // ),
     },
     {
       title: "Quantity",
@@ -69,7 +93,7 @@ export default function Pcs(props) {
     {
       title: "Action",
       key: "action",
-      render: (text, record) => (
+      render: (record) => (
         <Space size="middle">
           <Button
             type="primary"
@@ -80,14 +104,16 @@ export default function Pcs(props) {
             More Details
             {/* {record.name} primary boi den het btn */}
           </Button>
-          <Button
-            type="primary"
-            shape="round"
-            style={{ backgroundColor: "#ffb74d", borderColor: "#ffb74d" }}
-          >
-            Edit
-            {/* {record.name} primary boi den het btn */}
-          </Button>
+          <Link target="_top" to={`/laptop/edit/${record.id}`}>
+            <Button
+              type="primary"
+              shape="round"
+              style={{ backgroundColor: "#ffb74d", borderColor: "#ffb74d" }}
+            >
+              Edit
+              {/* {record.name} primary boi den het btn */}
+            </Button>
+          </Link>
           <Button
             type="primary"
             danger
@@ -116,13 +142,6 @@ export default function Pcs(props) {
     },
   ];
 
-  useEffect(() => {
-    ProductsAPI.getProducts(id).then((res) => {
-      console.log("data", res);
-      setData(res.data);
-      setLoading(false);
-    });
-  });
   return (
     <div>
       <div
@@ -136,8 +155,9 @@ export default function Pcs(props) {
         }}
       >
         <div>
-          <p style={{ fontSize: 24, margin: 0 }}>PCs</p>
+          <p style={{ fontSize: 24, margin: 0 }}>{name}</p>
         </div>
+        {/* <Link target="_top" to="/laptop/add"> */}
         <Button
           type="primary"
           shape="round"
@@ -145,8 +165,9 @@ export default function Pcs(props) {
           size={30}
           onClick={addopen}
         >
-          Add new PC
+          Add new {name}
         </Button>
+        {/* </Link> */}
       </div>
       <Table columns={columns} dataSource={data} loading={loading} />
       <Details
@@ -155,7 +176,12 @@ export default function Pcs(props) {
         visible={visible}
         title={title}
       />
-      <AddDrawer addvisible={addvisible} onClose={onClosed} title={titleAdd} />
+      <AddDrawer
+        addvisible={addvisible}
+        onClose={onClosed}
+        title={titleAdd}
+        name={name}
+      />
     </div>
   );
 }

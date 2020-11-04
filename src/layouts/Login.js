@@ -136,7 +136,7 @@ export default function Login() {
                   loading={loading}
                   disabled={loading}
                 >
-                  {loading ? "Submiting" : "Submit"}
+                  {loading ? "Loging in ..." : "Log in"}
                 </Button>
               </Form.Item>
             </Form>

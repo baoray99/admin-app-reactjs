@@ -8,16 +8,8 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 //   faCoffee,
 //   faTv,
 // } from "@fortawesome/free-solid-svg-icons";
-import Laptops from "../pages/Laptops";
-import Pcs from "../pages/Pcs";
-import Keyboards from "../pages/Keyboards";
-import Mouses from "../pages/Mouses";
-import Monitors from "../pages/Monitors";
-import GraphicCards from "../pages/GraphicCards";
 import Home from "../pages/Home";
 import Customers from "../pages/Customers";
-import AddLaptop from "../pages/Addproduct";
-import EditLaptop from "../pages/Editproduct";
 import CategoriesAPI from "../api/CategoriesAPI";
 import BrandsAPI from "../api/BrandAPI";
 import {
@@ -33,14 +25,11 @@ import "./index.css";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import ProductByBrand from "../pages/ProductByBrand";
+import ProductByCate from "../pages/ProductByCate";
 
 export default function Layouts() {
-  const [categories, setCategories] = useState();
-  const [brands, setBrands] = useState();
-  // const [collapsed, setCollapsed] = useState(false);
-  // const onCollapse = (collapsed) => {
-  //   setCollapsed(collapsed);
-  // };
+  const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
   const { Header, Content, Sider } = Layout;
   const { SubMenu } = Menu;
   const { Search } = Input;
@@ -53,14 +42,12 @@ export default function Layouts() {
     BrandsAPI.getBrands().then((res) => {
       setBrands(res.data);
     });
-  });
+  }, []);
   useEffect(() => {
     CategoriesAPI.getCategories().then((res) => {
       setCategories(res.data);
-      // console.log(res.data)
     });
   }, []);
-
   const suffix = (
     <AudioOutlined
       style={{
@@ -69,7 +56,6 @@ export default function Layouts() {
       }}
     />
   );
-
   const menu = (
     <Menu>
       <Menu.Item>
@@ -104,7 +90,6 @@ export default function Layouts() {
       </Menu.Item>
     </Menu>
   );
-
   return (
     <div>
       <Router>
@@ -185,9 +170,6 @@ export default function Layouts() {
                 height: "91.5%",
                 overflowY: "scroll",
               }}
-              // collapsible
-              // collapsed={collapsed}
-              // onCollapse={onCollapse}
             >
               <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
                 <Menu.Item key="1" icon={<HomeOutlined />}>
@@ -243,45 +225,20 @@ export default function Layouts() {
                   padding: "10px",
                   backgroundColor: "white",
                   marginTop: 64,
-                  // marginLeft: collapsed ? 80 : 200,
                 }}
               >
                 <Route exact path="/home" component={Home} />
                 <Route
                   exact
-                  path="/products/category/Laptop/:id"
-                  component={Laptops}
-                />
-                <Route exact path="/products/category/Pc/:id" component={Pcs} />
-                <Route
-                  exact
-                  path="/products/category/Keyboard/:id"
-                  component={Keyboards}
-                />
-                <Route
-                  exact
-                  path="/products/category/Mouses/:id"
-                  component={Mouses}
-                />
-                <Route
-                  exact
-                  path="/products/category/Monitors/:id"
-                  component={Monitors}
-                />
-                <Route
-                  exact
-                  path="/products/category/GraphicCards/:id"
-                  component={GraphicCards}
+                  path="/products/category/:name/:id"
+                  component={ProductByCate}
                 />
                 <Route
                   exact
                   path="/products/brand/:name/:id"
                   component={ProductByBrand}
                 />
-
                 <Route exact path="/customers" component={Customers} />
-                <Route exact path="/laptop/add" component={AddLaptop} />
-                <Route exact path="/laptop/edit/:id" component={EditLaptop} />
               </Content>
             </Switch>
           </Layout>

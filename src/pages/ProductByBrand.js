@@ -10,11 +10,19 @@ export default function ProductByBrand(props) {
   const id = props.match.params.id;
   const name = props.match.params.name;
   const title = name;
+  const titleAdd = `Add ${name} product`;
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState([]);
   const [visible, setVisible] = useState(false);
   const [addvisible, setAddvisible] = useState(false);
+  useEffect(() => {
+    setLoading(true);
+    ProductsAPIBrand.getProducts(id).then((res) => {
+      setData(res.data);
+      setLoading(false);
+    });
+  }, [id]); // [id ] thay doi thi bo trong nay no se tu reload lai
   const onClose = () => {
     setVisible(false);
   };
@@ -109,20 +117,20 @@ export default function ProductByBrand(props) {
             type="primary"
             danger
             shape="round"
-            // onClick={() =>
-            //   ProductsAPI.deleteProductbyId(record.id).then((res) => {
-            //     setLoading(true);
-            //     ProductsAPI.getProducts()
-            //       .then((res) => {
-            //         setData(res.data);
-            //         success();
-            //         setLoading(false);
-            //       })
-            //       .catch((err) => {
-            //         error();
-            //       });
-            //   })
-            // }
+            onClick={() =>
+              ProductsAPIBrand.deleteProductbyId(record.id).then((res) => {
+                setLoading(true);
+                ProductsAPIBrand.getProducts(id)
+                  .then((res) => {
+                    setData(res.data);
+                    success();
+                    setLoading(false);
+                  })
+                  .catch((err) => {
+                    error();
+                  });
+              })
+            }
           >
             Delete
             {/* {record.name} primary boi den het btn */}
@@ -132,21 +140,46 @@ export default function ProductByBrand(props) {
       width: 200,
     },
   ];
-  useEffect(() => {
-    setLoading(true);
-    ProductsAPIBrand.getProducts(id).then((res) => {
-      setData(res.data);
-      setLoading(false);
-    });
-  }, [id]); // [id ] thay doi thi bo trong nay no se tu reload lai
+
   return (
     <div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          height: 60,
+          width: "100%",
+        }}
+      >
+        <div>
+          <p style={{ fontSize: 24, margin: 0 }}>{name}</p>
+        </div>
+        {/* <Link target="_top" to="/laptop/add"> */}
+        <Button
+          type="primary"
+          shape="round"
+          icon={<PlusOutlined />}
+          size={30}
+          onClick={addopen}
+        >
+          Add new product
+        </Button>
+        {/* </Link> */}
+      </div>
       <Table columns={columns} dataSource={data} loading={loading} />
       <Details
         item={selectedItem}
         onClose={onClose}
         visible={visible}
         title={title}
+      />
+      <AddDrawer
+        addvisible={addvisible}
+        onClose={onClosed}
+        title={titleAdd}
+        brandname={name}
       />
     </div>
   );
