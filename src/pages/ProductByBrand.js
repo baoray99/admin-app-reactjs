@@ -1,21 +1,26 @@
 import { Table, Space, Button, Modal } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import ProductsAPIBrand from "../api/ProductAPIBrand";
+import ProductsAPI from "../api/ProductsAPI";
 import Details from "../components/Details";
 import AddDrawer from "../components/AddDrawer";
+import EditDrawer from "../components/EditDrawer";
 
 export default function ProductByBrand(props) {
   const id = props.match.params.id;
-  const name = props.match.params.name;
-  const title = name;
-  const titleAdd = `Add ${name} product`;
+  const [idedit, setIdedit] = useState("");
+  const [productDetail, setProductDetail] = useState({});
+  const brandname = props.match.params.name;
+  const title = brandname;
+  const titleAdd = `Add ${brandname} product`;
+  const titleEdit = `Edit ${brandname} product`;
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState([]);
   const [visible, setVisible] = useState(false);
   const [addvisible, setAddvisible] = useState(false);
+  const [editvisible, setEditvisible] = useState(false);
   useEffect(() => {
     setLoading(true);
     ProductsAPIBrand.getProducts(id).then((res) => {
@@ -23,14 +28,28 @@ export default function ProductByBrand(props) {
       setLoading(false);
     });
   }, [id]); // [id ] thay doi thi bo trong nay no se tu reload lai
+  useEffect(() => {
+    if (idedit) {
+      ProductsAPI.getProductbyId(idedit).then((res) => {
+        setProductDetail(res.data);
+      });
+    }
+  }, [idedit]);
   const onClose = () => {
     setVisible(false);
   };
   const onClosed = () => {
     setAddvisible(!addvisible);
   };
+  const onClosedd = () => {
+    setEditvisible(!editvisible);
+  };
   const addopen = () => {
     setAddvisible(!addvisible);
+  };
+  const editopen = (record) => {
+    setIdedit(record.id);
+    setTimeout(() => setEditvisible(!editvisible), 500);
   };
   const onSelectedItem = (record) => {
     setSelectedItem(record);
@@ -38,7 +57,7 @@ export default function ProductByBrand(props) {
   };
   function success() {
     Modal.success({
-      content: "Delete Successfully",
+      content: "Delete Success",
     });
   }
   function error() {
@@ -103,16 +122,17 @@ export default function ProductByBrand(props) {
             More Details
             {/* {record.name} primary boi den het btn */}
           </Button>
-          <Link target="_top" to={`/laptop/edit/${record.id}`}>
-            <Button
-              type="primary"
-              shape="round"
-              style={{ backgroundColor: "#ffb74d", borderColor: "#ffb74d" }}
-            >
-              Edit
-              {/* {record.name} primary boi den het btn */}
-            </Button>
-          </Link>
+          <Button
+            type="primary"
+            shape="round"
+            style={{ backgroundColor: "#ffb74d", borderColor: "#ffb74d" }}
+            onClick={() => {
+              editopen(record);
+            }}
+          >
+            Edit
+            {/* {record.name} primary boi den het btn */}
+          </Button>
           <Button
             type="primary"
             danger
@@ -154,7 +174,7 @@ export default function ProductByBrand(props) {
         }}
       >
         <div>
-          <p style={{ fontSize: 24, margin: 0 }}>{name}</p>
+          <p style={{ fontSize: 24, margin: 0 }}>{brandname}</p>
         </div>
         {/* <Link target="_top" to="/laptop/add"> */}
         <Button
@@ -169,18 +189,39 @@ export default function ProductByBrand(props) {
         {/* </Link> */}
       </div>
       <Table columns={columns} dataSource={data} loading={loading} />
-      <Details
-        item={selectedItem}
-        onClose={onClose}
-        visible={visible}
-        title={title}
-      />
-      <AddDrawer
-        addvisible={addvisible}
-        onClose={onClosed}
-        title={titleAdd}
-        brandname={name}
-      />
+      {visible ? (
+        <Details
+          item={selectedItem}
+          onClose={onClose}
+          visible={visible}
+          title={title}
+        />
+      ) : (
+        ""
+      )}
+
+      {addvisible ? (
+        <AddDrawer
+          addvisible={addvisible}
+          onClose={onClosed}
+          title={titleAdd}
+          brandname={brandname}
+        />
+      ) : (
+        ""
+      )}
+
+      {editvisible ? (
+        <EditDrawer
+          editvisible={editvisible}
+          onClose={onClosedd}
+          title={titleEdit}
+          brandname={brandname}
+          item={productDetail}
+        />
+      ) : (
+        ""
+      )}
     </div>
   );
 }

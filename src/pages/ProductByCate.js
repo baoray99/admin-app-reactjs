@@ -1,21 +1,24 @@
 import { Table, Space, Button, Modal } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import ProductsAPI from "../api/ProductsAPI";
 import Details from "../components/Details";
 import AddDrawer from "../components/AddDrawer";
-
+import EditDrawer from "../components/EditDrawer";
 export default function ProductByCate(props) {
   const id = props.match.params.id;
+  const [idedit, setIdedit] = useState("");
+  const [productDetail, setProductDetail] = useState({});
   const [name, setName] = useState(props.match.params.name);
   const title = name;
   const titleAdd = `Add ${name}`;
+  const titleEdit = `Edit ${name}`;
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState([]);
   const [visible, setVisible] = useState(false);
   const [addvisible, setAddvisible] = useState(false);
+  const [editvisible, setEditvisible] = useState(false);
   useEffect(() => {
     setName(props.match.params.name);
     setLoading(true);
@@ -24,14 +27,28 @@ export default function ProductByCate(props) {
       setLoading(false);
     });
   }, [id]);
+  useEffect(() => {
+    if (idedit) {
+      ProductsAPI.getProductbyId(idedit).then((res) => {
+        setProductDetail(res.data);
+      });
+    }
+  }, [idedit]);
   const onClose = () => {
     setVisible(false);
   };
   const onClosed = () => {
     setAddvisible(!addvisible);
   };
+  const onClosedd = () => {
+    setEditvisible(!editvisible);
+  };
   const addopen = () => {
     setAddvisible(!addvisible);
+  };
+  const editopen = (record) => {
+    setIdedit(record.id);
+    setTimeout(() => setEditvisible(!editvisible), 500);
   };
   const onSelectedItem = (record) => {
     setSelectedItem(record);
@@ -39,7 +56,7 @@ export default function ProductByCate(props) {
   };
   function success() {
     Modal.success({
-      content: "Delete Successfully",
+      content: "Delete Success",
     });
   }
   function error() {
@@ -104,16 +121,17 @@ export default function ProductByCate(props) {
             More Details
             {/* {record.name} primary boi den het btn */}
           </Button>
-          <Link target="_top" to={`/laptop/edit/${record.id}`}>
-            <Button
-              type="primary"
-              shape="round"
-              style={{ backgroundColor: "#ffb74d", borderColor: "#ffb74d" }}
-            >
-              Edit
-              {/* {record.name} primary boi den het btn */}
-            </Button>
-          </Link>
+          <Button
+            type="primary"
+            shape="round"
+            style={{ backgroundColor: "#ffb74d", borderColor: "#ffb74d" }}
+            onClick={() => {
+              editopen(record);
+            }}
+          >
+            Edit
+            {/* {record.name} primary boi den het btn */}
+          </Button>
           <Button
             type="primary"
             danger
@@ -170,18 +188,39 @@ export default function ProductByCate(props) {
         {/* </Link> */}
       </div>
       <Table columns={columns} dataSource={data} loading={loading} />
-      <Details
-        item={selectedItem}
-        onClose={onClose}
-        visible={visible}
-        title={title}
-      />
-      <AddDrawer
-        addvisible={addvisible}
-        onClose={onClosed}
-        title={titleAdd}
-        name={name}
-      />
+      {visible ? (
+        <Details
+          item={selectedItem}
+          onClose={onClose}
+          visible={visible}
+          title={title}
+        />
+      ) : (
+        ""
+      )}
+
+      {addvisible ? (
+        <AddDrawer
+          addvisible={addvisible}
+          onClose={onClosed}
+          title={titleAdd}
+          name={name}
+        />
+      ) : (
+        ""
+      )}
+
+      {editvisible ? (
+        <EditDrawer
+          editvisible={editvisible}
+          onClose={onClosedd}
+          title={titleEdit}
+          name={name}
+          item={productDetail}
+        />
+      ) : (
+        ""
+      )}
     </div>
   );
 }

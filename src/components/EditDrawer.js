@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import lo from "lodash";
 import {
   Form,
   Input,
@@ -15,13 +16,23 @@ import ProductsAPI from "../api/ProductsAPI";
 import CategoryAPI from "../api/CategoriesAPI";
 import BrandAPI from "../api/BrandAPI";
 
-export default function AddDraw(props) {
+export default function EditDrawer(props) {
   const { Option } = Select;
-  const titleAdd = props.title;
+  const item = props.item;
+  const details = item.product_detail;
+  const titleEdit = props.title;
   const catename = props.name;
   const brandname = props.brandname;
-  const onClosed = props.onClose;
-  const addvisible = props.addvisible;
+  const onClosedd = props.onClose;
+  const editvisible = props.editvisible;
+  var result = [];
+  {
+    details &&
+      (result = Object.keys(details).map((key) => ({
+        propname: key,
+        propval: lo.get(details, key),
+      })));
+  } //chuyen object ve mang object
   const [loading, setLoading] = useState(false);
   const [brands, getBrands] = useState([]);
   const [cates, getCates] = useState([]);
@@ -57,13 +68,13 @@ export default function AddDraw(props) {
   };
   function success() {
     Modal.success({
-      content: "Add Success",
+      content: "Edit Success",
     });
   }
   function error() {
     Modal.error({
       title: "ERROR",
-      content: "Add Fail",
+      content: "Edit Fail",
     });
   }
   function setBrand(value) {
@@ -106,7 +117,7 @@ export default function AddDraw(props) {
       product_detail: dd,
       description: values.description,
     };
-    ProductsAPI.postProduct(product)
+    ProductsAPI.updateProduct(item.id, product)
       .then((res) => {
         success();
         setLoading(false);
@@ -118,13 +129,11 @@ export default function AddDraw(props) {
       });
   };
   useEffect(() => {
-    BrandAPI.getBrands().then((res) => {
-      getBrands(res.data);
-    });
-  }, []);
-  useEffect(() => {
     CategoryAPI.getCategories().then((res) => {
       getCates(res.data);
+    });
+    BrandAPI.getBrands().then((res) => {
+      getBrands(res.data);
     });
   }, []);
   return (
@@ -133,15 +142,26 @@ export default function AddDraw(props) {
         width={640}
         placement="right"
         closable={false}
-        onClose={onClosed}
-        visible={addvisible}
+        onClose={onClosedd}
+        visible={editvisible}
       >
         <Divider orientation="center">
-          <h1>{titleAdd}</h1>
+          <h1>{titleEdit}</h1>
         </Divider>
         <Form
           {...layout}
-          name="nest-messages"
+          name="edit"
+          initialValues={{
+            name: item.name,
+            id_category: item.id_category,
+            id_brand: item.id_brand,
+            price: item.price,
+            saleprice: item.sales_price,
+            quantity: item.quantity,
+            product_detail: result,
+            images: item.image,
+            description: item.description,
+          }}
           onFinish={onFinish}
           validateMessages={validateMessages}
           style={{ width: "100%" }}
@@ -172,8 +192,8 @@ export default function AddDraw(props) {
                 >
                   <Select
                     style={{ marginLeft: 10 }}
-                    defaultValue={catename}
-                    // disabled={true}
+                    // defaultValue={catename}
+                    disabled={true}
                     onChange={(value) => {
                       setCategory(value);
                     }}
@@ -200,6 +220,7 @@ export default function AddDraw(props) {
                 style={{ marginLeft: 10 }}
                 placeholder="Please select category"
                 optionFilterProp="children"
+                // defaultValue={productDetail.category.name}
                 filterOption={(input, option) =>
                   option.children.toLowerCase().indexOf(input.toLowerCase()) >=
                   0
@@ -231,7 +252,8 @@ export default function AddDraw(props) {
                   <Select
                     placeholder="Please select a brand"
                     style={{ marginLeft: 10 }}
-                    defaultValue={brandname}
+                    // defaultValue={brandname}
+                    disabled={true}
                     onChange={(value) => {
                       setBrand(value);
                     }}
@@ -257,6 +279,7 @@ export default function AddDraw(props) {
                 placeholder="Please select a brand"
                 showSearch
                 style={{ marginLeft: 10 }}
+                // defaultValue={productDetail.brand.name}
                 optionFilterProp="children"
                 filterOption={(input, option) =>
                   option.children.toLowerCase().indexOf(input.toLowerCase()) >=
