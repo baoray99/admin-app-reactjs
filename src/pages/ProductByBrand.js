@@ -1,4 +1,4 @@
-import { Table, Space, Button, Modal } from "antd";
+import { Table, Space, Button, Modal, Input } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
 import ProductsAPIBrand from "../api/ProductAPIBrand";
@@ -8,6 +8,7 @@ import AddDrawer from "../components/AddDrawer";
 import EditDrawer from "../components/EditDrawer";
 
 export default function ProductByBrand(props) {
+  const { Search } = Input;
   const id = props.match.params.id;
   const [idedit, setIdedit] = useState("");
   const [productDetail, setProductDetail] = useState({});
@@ -16,6 +17,8 @@ export default function ProductByBrand(props) {
   const titleAdd = `Add ${brandname} product`;
   const titleEdit = `Edit ${brandname} product`;
   const [data, setData] = useState([]);
+  const [result, setResult] = useState([]);
+  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState([]);
   const [visible, setVisible] = useState(false);
@@ -25,6 +28,7 @@ export default function ProductByBrand(props) {
     setLoading(true);
     ProductsAPIBrand.getProducts(id).then((res) => {
       setData(res.data);
+      setResult(res.data);
       setLoading(false);
     });
   }, [id]); // [id ] thay doi thi bo trong nay no se tu reload lai
@@ -35,6 +39,13 @@ export default function ProductByBrand(props) {
       });
     }
   }, [idedit]);
+  const onSearch = (value) => {
+    setSearch(value);
+    const resultSearch = data.filter((x) =>
+      x.name.toLowerCase().includes(search.toLowerCase())
+    );
+    setResult(resultSearch);
+  };
   const onClose = () => {
     setVisible(false);
   };
@@ -173,9 +184,21 @@ export default function ProductByBrand(props) {
           width: "100%",
         }}
       >
-        <div>
-          <p style={{ fontSize: 24, margin: 0 }}>{brandname}</p>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <p style={{ fontSize: 24, marginRight: 24 }}>{brandname}</p>
+          <Search
+            placeholder="Search Product"
+            allowClear
+            size="middle"
+            onChange={onSearch}
+          />
         </div>
+
         {/* <Link target="_top" to="/laptop/add"> */}
         <Button
           type="primary"

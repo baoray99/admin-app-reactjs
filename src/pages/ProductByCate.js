@@ -1,4 +1,4 @@
-import { Table, Space, Button, Modal } from "antd";
+import { Table, Space, Button, Modal, Input } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
 import ProductsAPI from "../api/ProductsAPI";
@@ -6,6 +6,7 @@ import Details from "../components/Details";
 import AddDrawer from "../components/AddDrawer";
 import EditDrawer from "../components/EditDrawer";
 export default function ProductByCate(props) {
+  const { Search } = Input;
   const id = props.match.params.id;
   const [idedit, setIdedit] = useState("");
   const [productDetail, setProductDetail] = useState({});
@@ -14,6 +15,8 @@ export default function ProductByCate(props) {
   const titleAdd = `Add ${name}`;
   const titleEdit = `Edit ${name}`;
   const [data, setData] = useState([]);
+  const [result, setResult] = useState([]);
+  const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState([]);
   const [visible, setVisible] = useState(false);
@@ -24,6 +27,7 @@ export default function ProductByCate(props) {
     setLoading(true);
     ProductsAPI.getProducts(id).then((res) => {
       setData(res.data);
+      setResult(res.data);
       setLoading(false);
     });
   }, [id]);
@@ -34,6 +38,14 @@ export default function ProductByCate(props) {
       });
     }
   }, [idedit]);
+  const onSearch = (value) => {
+    console.log(value);
+    setSearch(value);
+    const resultSearch = data.filter((x) =>
+      x.name.toLowerCase().includes(search.toLowerCase())
+    );
+    setResult(resultSearch);
+  }; // search realtime
   const onClose = () => {
     setVisible(false);
   };
@@ -172,8 +184,19 @@ export default function ProductByCate(props) {
           width: "100%",
         }}
       >
-        <div>
-          <p style={{ fontSize: 24, margin: 0 }}>{name}</p>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <p style={{ fontSize: 24, marginRight: 24 }}>{name}</p>
+          <Search
+            placeholder="Search Product"
+            allowClear
+            size="middle"
+            onChange={(e) => onSearch(e.target.value)}
+          />
         </div>
         {/* <Link target="_top" to="/laptop/add"> */}
         <Button
@@ -187,7 +210,7 @@ export default function ProductByCate(props) {
         </Button>
         {/* </Link> */}
       </div>
-      <Table columns={columns} dataSource={data} loading={loading} />
+      <Table columns={columns} dataSource={result} loading={loading} />
       {visible ? (
         <Details
           item={selectedItem}

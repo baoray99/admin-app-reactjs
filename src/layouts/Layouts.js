@@ -32,12 +32,12 @@ export default function Layouts() {
   const [brands, setBrands] = useState([]);
   const { Header, Content, Sider } = Layout;
   const { SubMenu } = Menu;
-  const { Search } = Input;
   const history = useHistory();
   const logout = () => {
     localStorage.clear();
     history.push("/login");
   };
+
   useEffect(() => {
     BrandsAPI.getBrands().then((res) => {
       setBrands(res.data);
@@ -48,14 +48,6 @@ export default function Layouts() {
       setCategories(res.data);
     });
   }, []);
-  const suffix = (
-    <AudioOutlined
-      style={{
-        fontSize: 16,
-        color: "#1890ff",
-      }}
-    />
-  );
   const menu = (
     <Menu>
       <Menu.Item>
@@ -122,20 +114,13 @@ export default function Layouts() {
             style={{
               display: "flex",
               width: "80%",
-              flexDirection: "row",
+              alignItems: "center",
               justifyContent: "center",
             }}
           >
-            <Search
-              style={{
-                width: "500px",
-              }}
-              placeholder="Search..."
-              enterButton="Search"
-              size="large"
-              suffix={suffix}
-              onSearch={(value) => console.log(value)}
-            />
+            <marquee style={{ color: "white" }}>
+              Welcome to Van Tech Company Administator Web
+            </marquee>
           </div>
           <div
             style={{
