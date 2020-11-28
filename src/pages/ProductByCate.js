@@ -45,7 +45,7 @@ export default function ProductByCate(props) {
       x.name.toLowerCase().includes(search.toLowerCase())
     );
     setResult(resultSearch);
-  }; // search realtime
+  }; // search realtime name
   const onClose = () => {
     setVisible(false);
   };

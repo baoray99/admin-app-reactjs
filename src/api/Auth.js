@@ -1,15 +1,15 @@
 import axios from "axios";
 
-function login(username, password) {
+function login(email, password) {
   return new Promise(function (resolve, reject) {
     axios
-      .post("https://reqres.in/api/login", {
-        email: username,
+      .post("https://travellove-cndd.herokuapp.com/users/login", {
+        email: email,
         password: password,
       })
       .then((res) => {
         resolve(res);
-        localStorage.setItem("token", JSON.stringify(res.data.token))
+        localStorage.setItem("token", JSON.stringify(res.data.token));
       })
       .catch((err) => {
         reject(err);

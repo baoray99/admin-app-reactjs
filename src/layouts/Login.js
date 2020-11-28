@@ -17,7 +17,7 @@ export default function Login() {
   };
   const onFinish = (values) => {
     setLoading(true);
-    Auth.login(values.username, values.password)
+    Auth.login(values.email, values.password)
       .then((res) => {
         setLoading(false);
         history.push("/home");
@@ -99,7 +99,7 @@ export default function Login() {
             >
               <Form.Item
                 label="Username"
-                name="username"
+                name="email"
                 rules={[
                   { required: true, message: "Please input your username!" },
                 ]}
