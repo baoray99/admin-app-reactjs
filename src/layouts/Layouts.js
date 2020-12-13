@@ -1,4 +1,4 @@
-import { Layout, Menu, Avatar, Input, Dropdown } from "antd";
+import { Layout, Menu, Avatar, Input, Dropdown, Button } from "antd";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 // import {
@@ -16,23 +16,27 @@ import {
   UnorderedListOutlined,
   HomeOutlined,
   UserOutlined,
-  AudioOutlined,
   DownOutlined,
   LoginOutlined,
+  PlusCircleOutlined,
+  CheckOutlined,
 } from "@ant-design/icons";
 import logo from "../assets/logo3.png";
 import "./index.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import ProductByBrand from "../pages/ProductByBrand";
 import ProductByCate from "../pages/ProductByCate";
+import { add } from "lodash";
 
 export default function Layouts() {
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
   const { Header, Content, Sider } = Layout;
   const { SubMenu } = Menu;
+  const [visible, setVisible] = useState(false);
   const history = useHistory();
+  const inputRef = useRef();
   const logout = () => {
     localStorage.clear();
     history.push("/login");
@@ -48,6 +52,16 @@ export default function Layouts() {
       setCategories(res.data);
     });
   }, []);
+  const addcate = (cateName) => {
+    const cate = {
+      name: cateName,
+    };
+    CategoriesAPI.addCategory(cate)
+      .then((res) => {
+        setTimeout(() => window.location.reload(), 500);
+      })
+      .catch((err) => {});
+  };
   const menu = (
     <Menu>
       <Menu.Item>
@@ -82,6 +96,25 @@ export default function Layouts() {
       </Menu.Item>
     </Menu>
   );
+  const menuAddCate = (
+    <Menu>
+      <Menu.Item key="0">
+        <Input
+          ref={inputRef}
+          placeholder="Input Category Name"
+          suffix={
+            <Button
+              icon={<CheckOutlined />}
+              onClick={(e) => {
+                addcate(inputRef.current.state.value);
+              }}
+            ></Button>
+          }
+        />
+      </Menu.Item>
+    </Menu>
+  );
+
   return (
     <div>
       <Router>
@@ -167,16 +200,34 @@ export default function Layouts() {
                 >
                   {categories.map((category) => {
                     return (
-                      <Menu.Item>
+                      <Menu.Item
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
                         {/* icon={<FontAwesomeIcon icon={faCoffee} />} */}
                         <Link
                           to={`/products/category/${category.name}/${category._id}`}
                         >
-                          {category.name}{" "}
+                          {category.name}
                         </Link>
                       </Menu.Item>
                     );
                   })}
+                  <Menu.Item>
+                    <Dropdown
+                      overlay={menuAddCate}
+                      trigger={["click"]}
+                      placement="bottomCenter"
+                      visible={visible}
+                      onClick={() => {
+                        setVisible(!visible);
+                      }}
+                    >
+                      <PlusCircleOutlined />
+                    </Dropdown>
+                  </Menu.Item>
                 </SubMenu>
                 <SubMenu
                   key="sub3"

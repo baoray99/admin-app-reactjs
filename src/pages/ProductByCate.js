@@ -1,13 +1,24 @@
-import { Table, Space, Button, Modal, Input } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import React, { useState, useEffect } from "react";
+import { Table, Space, Button, Modal, Input, Menu, Dropdown } from "antd";
+import {
+  PlusOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  CheckOutlined,
+} from "@ant-design/icons";
+import React, { useState, useEffect, useRef } from "react";
+import { useHistory } from "react-router-dom";
+// useRef de lay thuoc tinh cac component khac
 import ProductsAPI from "../api/ProductsAPI";
+import CateAPI from "../api/CategoriesAPI";
 import Details from "../components/Details";
 import AddDrawer from "../components/AddDrawer";
 import EditDrawer from "../components/EditDrawer";
 export default function ProductByCate(props) {
   const { Search } = Input;
+  const history = useHistory();
+  const inputRef = useRef();
   const id = props.match.params.id;
+  const [click, setClick] = useState(false);
   const [idedit, setIdedit] = useState("");
   const [productDetail, setProductDetail] = useState({});
   const [name, setName] = useState(props.match.params.name);
@@ -66,6 +77,33 @@ export default function ProductByCate(props) {
     setSelectedItem(record);
     setVisible(true);
   };
+  const editCate = (value, id) => {
+    const cate = {
+      name: value,
+    };
+    CateAPI.editCategory(id, cate)
+      .then((res) => {
+        setTimeout(() => window.location.reload(), 500);
+      })
+      .catch((err) => {
+        setLoading(false);
+      });
+  };
+  const deleCate = (id) => {
+    CateAPI.deleteCategory(id)
+      .then((res) => {
+        history.push("/home");
+        window.location.reload();
+      })
+      .catch((err) => {});
+  };
+  const menu = (
+    <Menu>
+      <Menu.Item key="0">
+        <Button onClick={() => deleCate(id)}>OK CHƯA ?</Button>
+      </Menu.Item>
+    </Menu>
+  );
   function success() {
     Modal.success({
       content: "Delete Success",
@@ -187,10 +225,44 @@ export default function ProductByCate(props) {
         <div
           style={{
             display: "flex",
+            width: 640,
             alignItems: "center",
           }}
         >
-          <p style={{ fontSize: 24, marginRight: 24 }}>{name}</p>
+          {click ? (
+            <Input
+              ref={inputRef}
+              placeholder={name}
+              suffix={
+                <Button
+                  icon={<CheckOutlined />}
+                  onClick={(e) => {
+                    editCate(inputRef.current.state.value, id);
+                  }}
+                ></Button>
+              }
+            />
+          ) : (
+            <p style={{ fontSize: 24, marginRight: 24 }}>{name}</p>
+          )}
+          <div
+            style={{
+              width: 80,
+              display: "flex",
+              justifyContent: "space-between",
+              marginRight: 30,
+            }}
+          >
+            <Button
+              icon={<EditOutlined />}
+              onClick={() => {
+                setClick(!click);
+              }}
+            ></Button>
+            <Dropdown overlay={menu} trigger={["click"]}>
+              <Button icon={<DeleteOutlined />}></Button>
+            </Dropdown>
+          </div>
           <Search
             placeholder="Search Product"
             allowClear
