@@ -1,14 +1,24 @@
-import { Table, Space, Button, Modal, Input } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import React, { useState, useEffect } from "react";
+import { Table, Space, Button, Modal, Input, Dropdown, Menu } from "antd";
+import {
+  PlusOutlined,
+  CheckOutlined,
+  EditOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
+import React, { useState, useEffect, useRef } from "react";
+import { useHistory } from "react-router-dom";
 import ProductsAPIBrand from "../api/ProductAPIBrand";
 import ProductsAPI from "../api/ProductsAPI";
+import BrandAPI from "../api/BrandAPI";
 import Details from "../components/Details";
 import AddDrawer from "../components/AddDrawer";
 import EditDrawer from "../components/EditDrawer";
 
 export default function ProductByBrand(props) {
   const { Search } = Input;
+  const history = useHistory();
+  const inputRef = useRef();
+  const [click, setClick] = useState(false);
   const id = props.match.params.id;
   const [idedit, setIdedit] = useState("");
   const [productDetail, setProductDetail] = useState({});
@@ -66,6 +76,33 @@ export default function ProductByBrand(props) {
     setSelectedItem(record);
     setVisible(true);
   };
+  const editBrand = (value, id) => {
+    const brand = {
+      name: value,
+    };
+    BrandAPI.editBrand(id, brand)
+      .then((res) => {
+        setTimeout(() => window.location.reload(), 500);
+      })
+      .catch((err) => {
+        setLoading(false);
+      });
+  };
+  const deleBrand = (id) => {
+    BrandAPI.deleteBrand(id)
+      .then((res) => {
+        history.push("/home");
+        window.location.reload();
+      })
+      .catch((err) => {});
+  };
+  const menu = (
+    <Menu>
+      <Menu.Item key="0">
+        <Button onClick={() => deleBrand(id)}>OK CHƯA ?</Button>
+      </Menu.Item>
+    </Menu>
+  );
   function success() {
     Modal.success({
       content: "Delete Success",
@@ -149,7 +186,7 @@ export default function ProductByBrand(props) {
             danger
             shape="round"
             onClick={() =>
-              ProductsAPIBrand.deleteProductbyId(record.id).then((res) => {
+              ProductsAPI.deleteProductbyId(record.id).then((res) => {
                 setLoading(true);
                 ProductsAPIBrand.getProducts(id)
                   .then((res) => {
@@ -190,7 +227,40 @@ export default function ProductByBrand(props) {
             alignItems: "center",
           }}
         >
-          <p style={{ fontSize: 24, marginRight: 24 }}>{brandname}</p>
+          {click ? (
+            <Input
+              ref={inputRef}
+              placeholder={brandname}
+              suffix={
+                <Button
+                  icon={<CheckOutlined />}
+                  onClick={(e) => {
+                    editBrand(inputRef.current.state.value, id);
+                  }}
+                ></Button>
+              }
+            />
+          ) : (
+            <p style={{ fontSize: 24, marginRight: 24 }}>{brandname}</p>
+          )}
+          <div
+            style={{
+              width: 80,
+              display: "flex",
+              justifyContent: "space-between",
+              marginRight: 30,
+            }}
+          >
+            <Button
+              icon={<EditOutlined />}
+              onClick={() => {
+                setClick(!click);
+              }}
+            ></Button>
+            <Dropdown overlay={menu} trigger={["click"]}>
+              <Button icon={<DeleteOutlined />}></Button>
+            </Dropdown>
+          </div>
           <Search
             placeholder="Search Product"
             allowClear

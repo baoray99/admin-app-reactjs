@@ -36,7 +36,8 @@ export default function Layouts() {
   const { SubMenu } = Menu;
   const [visible, setVisible] = useState(false);
   const history = useHistory();
-  const inputRef = useRef();
+  const inputRef1 = useRef();
+  const inputRef2 = useRef();
   const logout = () => {
     localStorage.clear();
     history.push("/login");
@@ -57,6 +58,16 @@ export default function Layouts() {
       name: cateName,
     };
     CategoriesAPI.addCategory(cate)
+      .then((res) => {
+        setTimeout(() => window.location.reload(), 500);
+      })
+      .catch((err) => {});
+  };
+  const addbrand = (brandName) => {
+    const brand = {
+      name: brandName,
+    };
+    BrandsAPI.addBrand(brand)
       .then((res) => {
         setTimeout(() => window.location.reload(), 500);
       })
@@ -100,13 +111,31 @@ export default function Layouts() {
     <Menu>
       <Menu.Item key="0">
         <Input
-          ref={inputRef}
+          ref={inputRef1}
           placeholder="Input Category Name"
           suffix={
             <Button
               icon={<CheckOutlined />}
               onClick={(e) => {
-                addcate(inputRef.current.state.value);
+                addcate(inputRef1.current.state.value);
+              }}
+            ></Button>
+          }
+        />
+      </Menu.Item>
+    </Menu>
+  );
+  const menuAddBrand = (
+    <Menu>
+      <Menu.Item key="0">
+        <Input
+          ref={inputRef2}
+          placeholder="Input Brand Name"
+          suffix={
+            <Button
+              icon={<CheckOutlined />}
+              onClick={(e) => {
+                addbrand(inputRef2.current.state.value);
               }}
             ></Button>
           }
@@ -244,6 +273,19 @@ export default function Layouts() {
                       </Menu.Item>
                     );
                   })}
+                  <Menu.Item>
+                    <Dropdown
+                      overlay={menuAddBrand}
+                      trigger={["click"]}
+                      placement="bottomCenter"
+                      visible={visible}
+                      onClick={() => {
+                        setVisible(!visible);
+                      }}
+                    >
+                      <PlusCircleOutlined />
+                    </Dropdown>
+                  </Menu.Item>
                 </SubMenu>
                 <SubMenu key="sub4" icon={<UserOutlined />} title="Users">
                   <Menu.Item key="8">
