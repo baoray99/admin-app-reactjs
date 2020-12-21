@@ -100,10 +100,12 @@ export default function ProductByCate(props) {
   const menu = (
     <Menu>
       <Menu.Item key="0">
-        <Button onClick={() => deleCate(id)}>OK CHƯA ?</Button>
+        <p>Are you sure?</p>
+        <Button onClick={() => deleCate(id)}>OK</Button>
       </Menu.Item>
     </Menu>
   );
+
   function success() {
     Modal.success({
       content: "Delete Success",
@@ -182,22 +184,16 @@ export default function ProductByCate(props) {
             Edit
             {/* {record.name} primary boi den het btn */}
           </Button>
+
           <Button
             type="primary"
             danger
             shape="round"
             onClick={() =>
               ProductsAPI.deleteProductbyId(record.id).then((res) => {
+                success();
                 setLoading(true);
-                ProductsAPI.getProducts(id)
-                  .then((res) => {
-                    success();
-                    setData(res.data);
-                    setLoading(false);
-                  })
-                  .catch((err) => {
-                    error();
-                  });
+                setTimeout(() => window.location.reload(), 2000);
               })
             }
           >

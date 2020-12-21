@@ -99,7 +99,8 @@ export default function ProductByBrand(props) {
   const menu = (
     <Menu>
       <Menu.Item key="0">
-        <Button onClick={() => deleBrand(id)}>OK CHƯA ?</Button>
+        <p>Are you sure?</p>
+        <Button onClick={() => deleBrand(id)}>OK</Button>
       </Menu.Item>
     </Menu>
   );
@@ -187,16 +188,9 @@ export default function ProductByBrand(props) {
             shape="round"
             onClick={() =>
               ProductsAPI.deleteProductbyId(record.id).then((res) => {
+                success();
                 setLoading(true);
-                ProductsAPIBrand.getProducts(id)
-                  .then((res) => {
-                    setData(res.data);
-                    success();
-                    setLoading(false);
-                  })
-                  .catch((err) => {
-                    error();
-                  });
+                setTimeout(() => window.location.reload(), 2000);
               })
             }
           >

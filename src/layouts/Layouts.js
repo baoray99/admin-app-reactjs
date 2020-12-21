@@ -12,6 +12,7 @@ import Home from "../pages/Home";
 import Customers from "../pages/Customers";
 import CategoriesAPI from "../api/CategoriesAPI";
 import BrandsAPI from "../api/BrandAPI";
+import Auth from "../api/Auth";
 import {
   UnorderedListOutlined,
   HomeOutlined,
@@ -27,11 +28,11 @@ import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import ProductByBrand from "../pages/ProductByBrand";
 import ProductByCate from "../pages/ProductByCate";
-import { add } from "lodash";
 
 export default function Layouts() {
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
+  const [userDetail, setUserDetail] = useState({});
   const { Header, Content, Sider } = Layout;
   const { SubMenu } = Menu;
   const [visible, setVisible] = useState(false);
@@ -42,7 +43,11 @@ export default function Layouts() {
     localStorage.clear();
     history.push("/login");
   };
-
+  useEffect(() => {
+    Auth.getDetail(JSON.parse(localStorage.getItem("token"))).then((res) => {
+      setUserDetail(res.data);
+    });
+  }, []);
   useEffect(() => {
     BrandsAPI.getBrands().then((res) => {
       setBrands(res.data);
@@ -75,33 +80,6 @@ export default function Layouts() {
   };
   const menu = (
     <Menu>
-      <Menu.Item>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="http://www.alipay.com/"
-        >
-          Profile
-        </a>
-      </Menu.Item>
-      <Menu.Item>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="http://www.taobao.com/"
-        >
-          Edit
-        </a>
-      </Menu.Item>
-      <Menu.Item>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="http://www.tmall.com/"
-        >
-          Change Avatar
-        </a>
-      </Menu.Item>
       <Menu.Item onClick={logout} danger icon={<LoginOutlined />}>
         Log out
       </Menu.Item>
@@ -175,7 +153,7 @@ export default function Layouts() {
           <div
             style={{
               display: "flex",
-              width: "80%",
+              width: "75%",
               alignItems: "center",
               justifyContent: "center",
             }}
@@ -187,7 +165,7 @@ export default function Layouts() {
           <div
             style={{
               display: "flex",
-              width: "10%",
+              width: "15%",
               flexDirection: "row",
               justifyContent: "space-around",
               alignItems: "center",
@@ -197,10 +175,13 @@ export default function Layouts() {
             <Dropdown overlay={menu}>
               <a
                 className="ant-dropdown-link"
-                onClick={(e) => e.preventDefault()}
-                style={{ color: "white" }}
+                style={{
+                  color: "white",
+                  display: "flex",
+                  alignItems: "center",
+                }}
               >
-                Baoray <DownOutlined />
+                <p>{userDetail.name} </p>{" "}
               </a>
             </Dropdown>
           </div>

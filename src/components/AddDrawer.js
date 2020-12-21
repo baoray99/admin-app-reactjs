@@ -109,7 +109,7 @@ export default function AddDraw(props) {
     ProductsAPI.postProduct(product)
       .then((res) => {
         success();
-        setLoading(false);
+        setLoading(true);
         setTimeout(() => window.location.reload(), 2000);
       })
       .catch((err) => {
@@ -141,7 +141,7 @@ export default function AddDraw(props) {
         </Divider>
         <Form
           {...layout}
-          name="nest-messages"
+          name="dynamic_form_item"
           onFinish={onFinish}
           validateMessages={validateMessages}
           style={{ width: "100%" }}
@@ -278,6 +278,7 @@ export default function AddDraw(props) {
             label="Price"
             rules={[
               {
+                required: true,
                 type: "number",
                 min: 0,
                 max: 1000000000,
@@ -312,7 +313,11 @@ export default function AddDraw(props) {
           >
             <InputNumber />
           </Form.Item>
-          <Form.Item name="description" label="Description">
+          <Form.Item
+            name="description"
+            label="Description"
+            rules={[{ required: true }]}
+          >
             <Input.TextArea />
             {/* onChange={(e)=>{setValue(e.target.value)}} */}
           </Form.Item>
