@@ -9,15 +9,14 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 //   faTv,
 // } from "@fortawesome/free-solid-svg-icons";
 import Home from "../pages/Home";
-import Customers from "../pages/Customers";
+import Orders from "../pages/Orders";
 import CategoriesAPI from "../api/CategoriesAPI";
 import BrandsAPI from "../api/BrandAPI";
 import Auth from "../api/Auth";
 import {
   UnorderedListOutlined,
   HomeOutlined,
-  UserOutlined,
-  DownOutlined,
+  DeliveredProcedureOutlined,
   LoginOutlined,
   PlusCircleOutlined,
   CheckOutlined,
@@ -268,11 +267,23 @@ export default function Layouts() {
                     </Dropdown>
                   </Menu.Item>
                 </SubMenu>
-                <SubMenu key="sub4" icon={<UserOutlined />} title="Users">
+                <SubMenu
+                  key="sub4"
+                  icon={<DeliveredProcedureOutlined />}
+                  title="Orders"
+                >
                   <Menu.Item key="8">
-                    <Link to="/customers"> Customers </Link>
+                    <Link to="/orders/status/Submitted"> Submitted </Link>
                   </Menu.Item>
-                  <Menu.Item key="9">Salers</Menu.Item>
+                  <Menu.Item key="9">
+                    <Link to="/orders/status/Processing"> Processing </Link>
+                  </Menu.Item>
+                  <Menu.Item key="10">
+                    <Link to="/orders/status/Shipping"> Shipping </Link>
+                  </Menu.Item>
+                  <Menu.Item key="11">
+                    <Link to="/orders/status/Cancel"> Cancel </Link>
+                  </Menu.Item>
                 </SubMenu>
               </Menu>
             </Sider>
@@ -297,7 +308,7 @@ export default function Layouts() {
                   path="/products/brand/:name/:id"
                   component={ProductByBrand}
                 />
-                <Route exact path="/customers" component={Customers} />
+                <Route exact path="/orders/status/:state" component={Orders} />
               </Content>
             </Switch>
           </Layout>
