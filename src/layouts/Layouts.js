@@ -31,7 +31,7 @@ import ProductByCate from "../pages/ProductByCate";
 export default function Layouts() {
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
-  const [userDetail, setUserDetail] = useState({});
+  const [userDetail, setUserDetail] = useState(null);
   const { Header, Content, Sider } = Layout;
   const { SubMenu } = Menu;
   const [visible, setVisible] = useState(false);
@@ -180,7 +180,7 @@ export default function Layouts() {
                   alignItems: "center",
                 }}
               >
-                <p>{userDetail.name} </p>{" "}
+                <p>{userDetail && userDetail.name} </p>
               </a>
             </Dropdown>
           </div>
