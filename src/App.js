@@ -9,16 +9,21 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 export default function App() {
+  const Title = "Van Tech Company";
   return (
     <div className="App">
+      <Helmet>
+        <title>{Title}</title>
+      </Helmet>
       <Router>
         <Switch>
           <Redirect exact from="/" to="/login" />
           <Route exact path="/login" component={Login} />
           <ProtectedRoute exact path="/*" component={Layouts} />
-           {/* muon lay het path co trong layout thi cho path cho /* la dc */}
+          {/* muon lay het path co trong layout thi cho path cho /* la dc */}
         </Switch>
       </Router>
     </div>
