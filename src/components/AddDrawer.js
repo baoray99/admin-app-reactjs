@@ -118,13 +118,11 @@ export default function AddDraw(props) {
       });
   };
   useEffect(() => {
-    BrandAPI.getBrands().then((res) => {
-      getBrands(res.data);
-    });
-  }, []);
-  useEffect(() => {
     CategoryAPI.getCategories().then((res) => {
       getCates(res.data);
+    });
+    BrandAPI.getBrands().then((res) => {
+      getBrands(res.data);
     });
   }, []);
   return (

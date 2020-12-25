@@ -32,6 +32,7 @@ export default function Layouts() {
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
   const [userDetail, setUserDetail] = useState(null);
+  const [role, setRole] = useState("");
   const { Header, Content, Sider } = Layout;
   const { SubMenu } = Menu;
   const [visible, setVisible] = useState(false);
@@ -45,18 +46,16 @@ export default function Layouts() {
   useEffect(() => {
     Auth.getDetail(JSON.parse(localStorage.getItem("token"))).then((res) => {
       setUserDetail(res.data);
+      setRole(res.data.role);
     });
-  }, []);
-  useEffect(() => {
     BrandsAPI.getBrands().then((res) => {
       setBrands(res.data);
     });
-  }, []);
-  useEffect(() => {
     CategoriesAPI.getCategories().then((res) => {
       setCategories(res.data);
     });
   }, []);
+
   const addcate = (cateName) => {
     const cate = {
       name: cateName,
@@ -202,88 +201,136 @@ export default function Layouts() {
                 <Menu.Item key="1" icon={<HomeOutlined />}>
                   <Link to="/home"> Home </Link>
                 </Menu.Item>
-                <SubMenu
-                  key="sub2"
-                  icon={<UnorderedListOutlined />}
-                  title="Categories"
-                >
-                  {categories.map((category) => {
-                    return (
-                      <Menu.Item
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
+                {role && role == "Admin" ? (
+                  <SubMenu
+                    key="sub2"
+                    icon={<UnorderedListOutlined />}
+                    title="Categories"
+                  >
+                    {categories.map((category) => {
+                      return (
+                        <Menu.Item
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          {/* icon={<FontAwesomeIcon icon={faCoffee} />} */}
+                          <Link
+                            to={`/products/category/${category.name}/${category._id}`}
+                          >
+                            {category.name}
+                          </Link>
+                        </Menu.Item>
+                      );
+                    })}
+                    <Menu.Item>
+                      <Dropdown
+                        overlay={menuAddCate}
+                        trigger={["click"]}
+                        placement="bottomCenter"
+                        visible={visible}
+                        onClick={() => {
+                          setVisible(!visible);
                         }}
                       >
-                        {/* icon={<FontAwesomeIcon icon={faCoffee} />} */}
-                        <Link
-                          to={`/products/category/${category.name}/${category._id}`}
-                        >
-                          {category.name}
-                        </Link>
-                      </Menu.Item>
-                    );
-                  })}
-                  <Menu.Item>
-                    <Dropdown
-                      overlay={menuAddCate}
-                      trigger={["click"]}
-                      placement="bottomCenter"
-                      visible={visible}
-                      onClick={() => {
-                        setVisible(!visible);
-                      }}
-                    >
-                      <PlusCircleOutlined />
-                    </Dropdown>
-                  </Menu.Item>
-                </SubMenu>
-                <SubMenu
-                  key="sub3"
-                  icon={<UnorderedListOutlined />}
-                  title="Brands"
-                >
-                  {brands.map((brand) => {
-                    return (
-                      <Menu.Item>
-                        {/* icon={<FontAwesomeIcon icon={faCoffee} />} */}
-                        <Link to={`/products/brand/${brand.name}/${brand._id}`}>
-                          {brand.name}{" "}
-                        </Link>
-                      </Menu.Item>
-                    );
-                  })}
-                  <Menu.Item>
-                    <Dropdown
-                      overlay={menuAddBrand}
-                      trigger={["click"]}
-                      placement="bottomCenter"
-                      visible={visible}
-                      onClick={() => {
-                        setVisible(!visible);
-                      }}
-                    >
-                      <PlusCircleOutlined />
-                    </Dropdown>
-                  </Menu.Item>
-                </SubMenu>
+                        <PlusCircleOutlined />
+                      </Dropdown>
+                    </Menu.Item>
+                  </SubMenu>
+                ) : (
+                  ""
+                )}
+                {role && role === "Admin" ? (
+                  <SubMenu
+                    key="sub3"
+                    icon={<UnorderedListOutlined />}
+                    title="Brands"
+                  >
+                    {brands.map((brand) => {
+                      return (
+                        <Menu.Item>
+                          {/* icon={<FontAwesomeIcon icon={faCoffee} />} */}
+                          <Link
+                            to={`/products/brand/${brand.name}/${brand._id}`}
+                          >
+                            {brand.name}{" "}
+                          </Link>
+                        </Menu.Item>
+                      );
+                    })}
+                    <Menu.Item>
+                      <Dropdown
+                        overlay={menuAddBrand}
+                        trigger={["click"]}
+                        placement="bottomCenter"
+                        visible={visible}
+                        onClick={() => {
+                          setVisible(!visible);
+                        }}
+                      >
+                        <PlusCircleOutlined />
+                      </Dropdown>
+                    </Menu.Item>
+                  </SubMenu>
+                ) : (
+                  ""
+                )}
                 <SubMenu
                   key="sub4"
                   icon={<DeliveredProcedureOutlined />}
                   title="Orders"
                 >
-                  <Menu.Item key="8">
-                    <Link to="/orders/status/Submitted"> Submitted </Link>
-                  </Menu.Item>
-                  <Menu.Item key="9">
-                    <Link to="/orders/status/Processing"> Processing </Link>
-                  </Menu.Item>
-                  <Menu.Item key="10">
-                    <Link to="/orders/status/Shipping"> Shipping </Link>
-                  </Menu.Item>
-                  <Menu.Item key="11">
-                    <Link to="/orders/status/Cancel"> Cancel </Link>
-                  </Menu.Item>
+                  {role && role === "Technical Employee" ? (
+                    <Menu.Item key="8">
+                      <Link to="/orders/status/Submitted"> Submitted </Link>
+                    </Menu.Item>
+                  ) : role === "Admin" ? (
+                    <Menu.Item key="8">
+                      <Link to="/orders/status/Submitted"> Submitted </Link>
+                    </Menu.Item>
+                  ) : (
+                    ""
+                  )}
+                  {role && role === "Technical Employee" ? (
+                    <Menu.Item key="9">
+                      <Link to="/orders/status/Processing"> Processing </Link>
+                    </Menu.Item>
+                  ) : role === "Admin" ? (
+                    <Menu.Item key="9">
+                      <Link to="/orders/status/Processing"> Processing </Link>
+                    </Menu.Item>
+                  ) : (
+                    ""
+                  )}
+                  {role && role === "Technical Employee" ? (
+                    <Menu.Item key="10">
+                      <Link to="/orders/status/Shipping"> Shipping </Link>
+                    </Menu.Item>
+                  ) : role === "Admin" ? (
+                    <Menu.Item key="10">
+                      <Link to="/orders/status/Shipping"> Shipping </Link>
+                    </Menu.Item>
+                  ) : (
+                    ""
+                  )}
+                  {role && role === "Admin" ? (
+                    <Menu.Item key="11">
+                      <Link to="/orders/ShippingOrder/getFullOrderShipping">
+                        {" "}
+                        Is Taken Orders{" "}
+                      </Link>
+                    </Menu.Item>
+                  ) : (
+                    ""
+                  )}
+                  {role && role === "Admin" ? (
+                    <Menu.Item key="12">
+                      <Link to="/orders/status/Cancel"> Cancel </Link>
+                    </Menu.Item>
+                  ) : (
+                    ""
+                  )}
                 </SubMenu>
               </Menu>
             </Sider>
@@ -309,6 +356,11 @@ export default function Layouts() {
                   component={ProductByBrand}
                 />
                 <Route exact path="/orders/status/:state" component={Orders} />
+                <Route
+                  exact
+                  path="/orders/ShippingOrder/getFullOrderShipping"
+                  component={Orders}
+                />
               </Content>
             </Switch>
           </Layout>

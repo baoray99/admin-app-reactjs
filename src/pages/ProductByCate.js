@@ -50,7 +50,6 @@ export default function ProductByCate(props) {
     }
   }, [idedit]);
   const onSearch = (value) => {
-    console.log(value);
     setSearch(value);
     const resultSearch = data.filter((x) =>
       x.name.toLowerCase().includes(search.toLowerCase())

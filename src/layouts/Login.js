@@ -36,7 +36,7 @@ export default function Login() {
   function error() {
     Modal.error({
       title: "ERROR",
-      content: "Login Fail",
+      content: "Username or password is invalid !",
     });
   }
   if (localStorage.getItem("token")) {
