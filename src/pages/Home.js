@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Card, Divider } from "antd";
-import Nhan from "../assets/56619805_383849135791887_6068932567573200896_o.jpg";
+import Nhan from "../assets/132847837_1238329233235814_7790797218859865692_n.jpg";
+import Bao from "../assets/IMG_20200127_222247.jpg";
 const { Meta } = Card;
 
 export default class Home extends Component {
@@ -91,12 +92,7 @@ export default class Home extends Component {
             <Card
               hoverable
               style={{ width: 360 }}
-              cover={
-                <img
-                  alt="example"
-                  src="https://scontent-xsp1-2.xx.fbcdn.net/v/t1.0-9/105370676_1638062836362393_6675110103135175723_o.jpg?_nc_cat=104&ccb=2&_nc_sid=730e14&_nc_ohc=_a-D_BEkngAAX_nSoAh&_nc_ht=scontent-xsp1-2.xx&oh=1a95268890628aeb8eee30ede0067abf&oe=60088473"
-                />
-              }
+              cover={<img alt="example" src={Bao} />}
             >
               <Meta title="Lê Thái Bảo" description="www.instagram.com" />
             </Card>
