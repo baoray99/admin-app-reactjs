@@ -154,7 +154,7 @@ export default function Orders(props) {
             >
               To Shipping{" "}
             </Button>
-          ) : record.status === "Complete" ? (
+          ) : record.status === "Complete" || record.status === "Cancel" ? (
             ""
           ) : (
             <Button
