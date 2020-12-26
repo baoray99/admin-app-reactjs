@@ -1,15 +1,8 @@
 import { Layout, Menu, Avatar, Input, Dropdown, Button } from "antd";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-// import {
-//   faKeyboard,
-//   faMouse,
-//   faSdCard,
-//   faCoffee,
-//   faTv,
-// } from "@fortawesome/free-solid-svg-icons";
 import Home from "../pages/Home";
 import Orders from "../pages/Orders";
+import Statistic from "../pages/Statistic";
 import CategoriesAPI from "../api/CategoriesAPI";
 import BrandsAPI from "../api/BrandAPI";
 import Auth from "../api/Auth";
@@ -20,6 +13,7 @@ import {
   LoginOutlined,
   PlusCircleOutlined,
   CheckOutlined,
+  PieChartOutlined,
 } from "@ant-design/icons";
 import logo from "../assets/logo3.png";
 import "./index.css";
@@ -318,7 +312,7 @@ export default function Layouts() {
                     <Menu.Item key="11">
                       <Link to="/orders/ShippingOrder/getFullOrderShipping">
                         {" "}
-                        Is Taken Orders{" "}
+                        Order's Status{" "}
                       </Link>
                     </Menu.Item>
                   ) : (
@@ -332,6 +326,16 @@ export default function Layouts() {
                     ""
                   )}
                 </SubMenu>
+                {role && role === "Admin" ? (
+                  <Menu.Item key="13" icon={<PieChartOutlined />}>
+                    <Link to="/orders/statistic/getShipperIsTaking">
+                      {" "}
+                      Revenue/Statistic{" "}
+                    </Link>
+                  </Menu.Item>
+                ) : (
+                  ""
+                )}
               </Menu>
             </Sider>
           )}
@@ -360,6 +364,11 @@ export default function Layouts() {
                   exact
                   path="/orders/ShippingOrder/getFullOrderShipping"
                   component={Orders}
+                />
+                <Route
+                  exact
+                  path="/orders/statistic/getShipperIsTaking"
+                  component={Statistic}
                 />
               </Content>
             </Switch>

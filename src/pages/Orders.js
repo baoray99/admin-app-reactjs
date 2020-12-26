@@ -154,8 +154,30 @@ export default function Orders(props) {
             >
               To Shipping{" "}
             </Button>
-          ) : (
+          ) : status === "Complete" ? (
             ""
+          ) : (
+            <Button
+              type="success"
+              style={{ marginRight: 15 }}
+              onClick={() => {
+                OrderAPI.toComplete(
+                  JSON.parse(localStorage.getItem("token")),
+                  record._id
+                ).then((res) => {
+                  setLoading(true);
+                  OrderAPI.getOrders(
+                    JSON.parse(localStorage.getItem("token")),
+                    state
+                  ).then((res) => {
+                    setData(res.data);
+                    setLoading(false);
+                  });
+                });
+              }}
+            >
+              To Complete{" "}
+            </Button>
           )}
         </Space>
       ),

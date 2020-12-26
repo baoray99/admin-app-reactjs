@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Card, Divider } from "antd";
 import Nhan from "../assets/132847837_1238329233235814_7790797218859865692_n.jpg";
 import Bao from "../assets/IMG_20200127_222247.jpg";
+import Van from "../assets/Screen Shot 2020-12-26 at 07.25.19.png";
 const { Meta } = Card;
 
 export default class Home extends Component {
@@ -27,12 +28,7 @@ export default class Home extends Component {
             <Card
               hoverable
               style={{ width: 360 }}
-              cover={
-                <img
-                  alt="example"
-                  src="https://scontent-xsp1-2.xx.fbcdn.net/v/t1.0-9/51451747_1501926116605534_9056755725568573440_n.jpg?_nc_cat=102&ccb=2&_nc_sid=174925&_nc_ohc=tV9wmWp1_oAAX-emSG0&_nc_ht=scontent-xsp1-2.xx&oh=039f02c4ab3aaf0ee8d4dc12685e91e6&oe=6007DC14"
-                />
-              }
+              cover={<img alt="example" src={Van} />}
             >
               <Meta title="Nguyễn Tiến Văn" description="www.instagram.com" />
             </Card>
