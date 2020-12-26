@@ -15,11 +15,9 @@ export default function Statistics() {
   const onChange = (dateString) => {
     const date = [];
     dateString.map((datee) => {
-      date.push(moment(datee._id).format("YYYY-MM-DD"));
+      date.push(moment(datee._d).format("YYYY-MM-DD"));
     });
-    console.log("date1", date);
     setDateString(date);
-    dateString && console.log("date2", dateString);
   };
   const onSelectedItem = (record) => {
     setSelectedItem(record);
@@ -100,11 +98,6 @@ export default function Statistics() {
       key: "customer_phone",
     },
     {
-      title: "Total Price",
-      dataIndex: "totalPrice",
-      key: "totalPrice",
-    },
-    {
       title: "Status",
       key: "status",
       dataIndex: "status",
@@ -133,7 +126,7 @@ export default function Statistics() {
   return (
     <div>
       <div>
-        <p style={{ fontSize: 24 }}>Statistic Table</p>
+        <p style={{ fontSize: 24 }}>Shipper Statistic Table</p>
       </div>
       <Table columns={columns1} dataSource={data1} loading={loading} />
       <div>
@@ -142,7 +135,17 @@ export default function Statistics() {
       <Space direction="vertical" size={12} style={{ marginBottom: 24 }}>
         <RangePicker onChange={onChange} />
       </Space>
-      <Table columns={columns2} dataSource={data2} loading={loading} />
+      <div
+        style={{ display: "flex", width: 360, justifyContent: "space-between" }}
+      >
+        <p>Doanh thu: {data2 && data2.revenue}</p>
+        <p>Thực thu: {data2 && data2.money_get}</p>
+      </div>
+      <Table
+        columns={columns2}
+        dataSource={data2 && data2.order}
+        loading={loading}
+      />
       <OrderDrawer item={selectedItem} onClose={onClose} visible={visible} />
     </div>
   );

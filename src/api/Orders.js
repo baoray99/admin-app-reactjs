@@ -91,12 +91,9 @@ function getShipperIsTaking(token) {
 }
 function Revenue(token, dateString) {
   const dateBody = {
-    time_from: dateString[0],
-    time_to: dateString[1],
+    time_from: dateString && dateString[0],
+    time_to: dateString && dateString[1],
   };
-  {
-    console.log("date3", dateString[0]);
-  }
   return new Promise(function (resolve, reject) {
     axios
       .post(
